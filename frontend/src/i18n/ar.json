@@ -1,0 +1,62 @@
+{
+  "app": { "name": "شـامل", "tagline": "نظام متكامل لتسيير العمليات التجارية" },
+  "nav": {
+    "pilotage": "القيادة", "dashboard": "لوحة القيادة", "stats": "الإحصائيات",
+    "purchasing": "المشتريات", "suppliers": "الموردون", "purchaseOrders": "طلبيات الموردين",
+    "receipts": "الاستلامات", "requests": "طلبات الشراء",
+    "sales": "المبيعات", "customers": "الزبائن", "quotes": "عروض الأسعار", "orders": "طلبيات الزبائن",
+    "deliveries": "التسليمات", "invoices": "الفواتير", "payments": "المدفوعات",
+    "resources": "الموارد", "products": "المنتجات", "stock": "المخزون", "serials": "الأرقام التسلسلية",
+    "alerts": "التنبيهات", "profile": "الملف الشخصي", "users": "المستخدمون", "logout": "تسجيل الخروج"
+  },
+  "common": {
+    "search": "بحث", "new": "جديد", "edit": "تعديل", "save": "حفظ",
+    "cancel": "إلغاء", "delete": "حذف", "close": "إغلاق", "loading": "جارٍ التحميل…",
+    "empty": "لا توجد عناصر للعرض", "error": "حدث خطأ",
+    "retry": "إعادة المحاولة", "actions": "الإجراءات", "total": "المجموع", "all": "الكل",
+    "darkMode": "الوضع الداكن", "lightMode": "الوضع الفاتح", "of": "من", "page": "الصفحة",
+    "export": "تصدير PDF", "send": "إرسال", "validate": "مصادقة", "back": "رجوع"
+  },
+  "status": {
+    "draft": "مسودة", "pending": "قيد الانتظار", "validated": "مصادق", "partial": "جزئي",
+    "completed": "منتهٍ", "cancelled": "ملغى", "refused": "مرفوض",
+    "paid": "مدفوعة", "overdue": "متأخرة"
+  },
+  "urgency": { "critical": "حرِج", "high": "مرتفع", "medium": "متوسط", "low": "منخفض" },
+  "auth": {
+    "title": "تسجيل الدخول", "subtitle": "ادخل إلى فضاء التسيير الخاص بك",
+    "username": "المعرّف", "password": "كلمة المرور", "submit": "دخول",
+    "error": "المعرّف أو كلمة المرور غير صحيحة."
+  },
+  "dashboard": {
+    "title": "لوحة القيادة", "revenueMonth": "رقم أعمال الشهر",
+    "receivables": "ديون الزبائن", "unpaid": "فواتير غير مدفوعة", "stockValue": "قيمة المخزون",
+    "supplierDebt": "ديون الموردين", "trend": "المشتريات مقابل المبيعات", "topCustomers": "أفضل الزبائن",
+    "topProducts": "المنتجات الأكثر مبيعًا", "openAlerts": "تنبيهات مفتوحة",
+    "purchases": "المشتريات", "salesLabel": "المبيعات"
+  },
+  "table": {
+    "number": "الرقم", "date": "التاريخ", "customer": "الزبون", "supplier": "المورّد",
+    "amount": "المبلغ مع الرسم", "balance": "الرصيد", "due": "الاستحقاق", "status": "الحالة",
+    "code": "الرمز", "name": "التسمية", "quantity": "الكمية", "price": "السعر",
+    "stock": "المخزون", "score": "التنقيط", "phone": "الهاتف", "wilaya": "الولاية"
+  },
+  "profile": {
+    "title": "الملف الشخصي", "personal": "الملف الشخصي", "company": "المؤسسة",
+    "settings": "الإعدادات التجارية", "security": "الأمن", "log": "سجل النشاط",
+    "identity": "المعلومات الشخصية", "privateTitle": "معطيات خاصة بصفة صارمة",
+    "privateText": "لا يطّلع عليها إلا المسيّر والمسؤول الإداري. لا تظهر أبدًا في وثيقة تجارية. كل اطّلاع يُسجَّل (القانون 18-07).",
+    "lastName": "اللقب", "firstName": "الاسم", "lastNameAr": "اللقب بالعربية", "firstNameAr": "الاسم بالعربية",
+    "birthDate": "تاريخ الميلاد", "birthPlace": "مكان الميلاد", "nin": "رقم التعريف الوطني",
+    "position": "الصفة", "appointedOn": "تاريخ استلام المهام", "capitalShare": "الحصة في رأس المال",
+    "mobile": "الهاتف النقال", "personalEmail": "البريد الشخصي", "address": "العنوان",
+    "companyName": "التسمية الاجتماعية", "legalForm": "الشكل القانوني", "capital": "رأس المال",
+    "vat": "الرسم الافتراضي", "currency": "العملة", "paymentTerm": "شروط الدفع",
+    "numbering": "الترقيم", "docLang": "لغة الوثائق", "creditLimit": "سقف الائتمان",
+    "changePassword": "تغيير كلمة المرور", "twoFactor": "المصادقة الثنائية (2FA)",
+    "loginAlert": "تنبيه عند اتصال غير معتاد", "closeSessions": "إغلاق الجلسات الأخرى",
+    "logins": "سجل الاتصالات", "device": "الجهاز", "preferences": "التفضيلات"
+  },
+  "alerts": { "title": "مركز التنبيهات", "markAllRead": "تعليم الكل كمقروء",
+              "resolve": "معالجة", "none": "لا توجد تنبيهات حاليًا" }
+}

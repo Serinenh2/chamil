@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Divers
+.DS_Store
+*.log
+.idea/
+.vscode/

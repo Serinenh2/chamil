@@ -1,0 +1,18 @@
+{% extends "documents/base_document.html" %}
+{% block doc_title %}Commande fournisseur{% endblock %}
+{% block parties %}
+<div class="parties">
+  <div class="party">
+    <b>Émetteur</b>
+    {{ company.name }}<br>{{ company.address }}<br>
+    <span class="data">{{ company.phone }}</span>
+  </div>
+  <div class="party">
+    <b>Destinataire</b>
+    {% if document.customer %}{{ document.customer.name }}<br>{{ document.customer.address }}<br>
+    <span class="data">RC {{ document.customer.rc }} · NIF {{ document.customer.nif }}</span>
+    {% elif document.supplier %}{{ document.supplier.name }}<br>{{ document.supplier.address }}<br>
+    <span class="data">RC {{ document.supplier.rc }} · NIF {{ document.supplier.nif }}</span>{% endif %}
+  </div>
+</div>
+{% endblock %}

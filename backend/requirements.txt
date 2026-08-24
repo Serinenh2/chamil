@@ -1,0 +1,32 @@
+# --- Socle -------------------------------------------------------------------
+Django==5.1.5
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.4.0
+django-cors-headers==4.6.0
+django-filter==24.3
+Pillow==11.1.0
+
+# --- Base de données ---------------------------------------------------------
+psycopg[binary]==3.2.3
+
+# --- Tâches de fond ----------------------------------------------------------
+celery==5.4.0
+redis==5.2.1
+django-celery-beat==2.7.0
+
+# --- Génération PDF (support arabe / RTL natif) ------------------------------
+WeasyPrint==63.1
+
+# --- Documentation API -------------------------------------------------------
+drf-spectacular==0.28.0
+
+# --- Serveur de production ---------------------------------------------------
+gunicorn==23.0.0
+whitenoise==6.8.2
+python-dotenv==1.0.1
+
+# --- Qualité -----------------------------------------------------------------
+black==24.10.0
+isort==5.13.2
+flake8==7.1.1
+pytest-django==4.9.0

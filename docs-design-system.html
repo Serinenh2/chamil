@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHAMIL | شـامل — Design System v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ================= TOKENS ================= */
+:root{
+  --brand-ink-900:#081C33; --brand-ink-800:#0B2545;
+  --brand-primary-700:#14498F; --brand-primary-600:#1B5CB4; --brand-primary-500:#2E74D6;
+  --brand-primary-100:#DCE9FA; --brand-primary-050:#EFF5FD;
+  --brand-brass-500:#B08A3C; --brand-brass-300:#D9BC7F;
+  --status-conforme:#178A50; --status-conforme-bg:#E4F5EC;
+  --status-partiel:#B45D0C; --status-partiel-bg:#FBEEDD;
+  --status-nonconforme:#C22D2D; --status-nonconforme-bg:#FBE7E7;
+  --status-manquant:#5C6B82; --status-manquant-bg:#ECF0F5;
+  --status-averifier:#6D3FC0; --status-averifier-bg:#F0EAFB;
+  --severity-critique:#A11B1B; --severity-eleve:#C2510A; --severity-moyen:#B08A00; --severity-faible:#4A7DBE;
+  --score-critique:#C22D2D; --score-faible:#D97706; --score-inter:#B08A00; --score-bon:#2E8B57; --score-tresbon:#178A50;
+  --font-ui:"IBM Plex Sans","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --font-arabic:"IBM Plex Sans Arabic","IBM Plex Sans",system-ui,sans-serif;
+  --font-data:"IBM Plex Mono",ui-monospace,monospace;
+  --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-pill:999px;
+  --ease:cubic-bezier(.22,.8,.36,1);
+}
+:root,[data-theme="light"]{
+  --bg-app:#F5F7FB; --bg-surface:#FFFFFF; --bg-sunken:#EDF1F7; --bg-sidebar:#0B2545;
+  --border:#E1E7F0; --border-strong:#C6D1E0;
+  --text-primary:#14212F; --text-secondary:#51617A; --text-muted:#8393A9; --text-on-dark:#F2F6FB;
+  --link:#1B5CB4; --focus:#2E74D6;
+  --shadow-card:0 1px 2px rgba(8,28,51,.05),0 4px 16px rgba(8,28,51,.06);
+  --shadow-pop:0 8px 30px rgba(8,28,51,.16);
+}
+[data-theme="dark"]{
+  --bg-app:#0A111E; --bg-surface:#101A2B; --bg-sunken:#0D1524; --bg-sidebar:#081C33;
+  --border:#1E2B41; --border-strong:#2B3B57;
+  --text-primary:#E8EEF7; --text-secondary:#A5B3C9; --text-muted:#6E7F99; --text-on-dark:#F2F6FB;
+  --link:#6EA8F0; --focus:#6EA8F0;
+  --brand-primary-600:#2E74D6; --brand-primary-700:#4A8AE2;
+  --brand-primary-100:#17335C; --brand-primary-050:#122845;
+  --status-conforme:#4CC38A; --status-conforme-bg:#12301F;
+  --status-partiel:#E8A253; --status-partiel-bg:#33230F;
+  --status-nonconforme:#F07575; --status-nonconforme-bg:#3A1414;
+  --status-manquant:#9AA8BD; --status-manquant-bg:#1B2536;
+  --status-averifier:#A98BE8; --status-averifier-bg:#251A3D;
+  --shadow-card:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --shadow-pop:0 10px 34px rgba(0,0,0,.5);
+}
+
+/* ================= BASE ================= */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg-app); color:var(--text-primary);
+  font-family:var(--font-ui); font-size:.9375rem; line-height:1.6;
+  transition:background .22s var(--ease), color .22s var(--ease);
+}
+html[dir="rtl"] body{font-family:var(--font-arabic); line-height:1.8}
+h1,h2,h3,h4{line-height:1.25; margin:0}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important; transition:none!important}}
+.data{font-family:var(--font-data); direction:ltr; unicode-bidi:isolate}
+
+/* ================= LAYOUT DÉMO ================= */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:12px 24px; background:var(--bg-sidebar); color:var(--text-on-dark);
+  border-bottom:3px solid var(--brand-brass-500);
+}
+.wordmark{display:flex; align-items:baseline; gap:10px}
+.wordmark .ar{font-family:var(--font-arabic); font-size:1.55rem; font-weight:700; letter-spacing:.5px}
+.wordmark .lat{font-size:.8rem; font-weight:600; letter-spacing:.28em; color:var(--brand-brass-300); text-transform:uppercase}
+.topbar .spacer{flex:1}
+.toggle-group{display:flex; gap:8px}
+.toggle{
+  border:1px solid rgba(255,255,255,.28); background:rgba(255,255,255,.06);
+  color:var(--text-on-dark); border-radius:var(--radius-pill);
+  padding:6px 14px; font:inherit; font-size:.8125rem; font-weight:600; cursor:pointer;
+  transition:background .14s var(--ease);
+}
+.toggle:hover{background:rgba(255,255,255,.16)}
+.toggle[aria-pressed="true"]{background:var(--brand-brass-500); border-color:var(--brand-brass-500); color:#14212F}
+
+.wrap{max-width:1120px; margin:0 auto; padding:40px 24px 96px}
+.hero{padding:48px 0 8px}
+.hero h1{font-size:1.875rem}
+.hero p{color:var(--text-secondary); max-width:62ch; font-size:1.0625rem}
+.eyebrow{
+  display:inline-block; font-size:.75rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--brand-brass-500); margin-bottom:8px;
+}
+section{margin-top:64px}
+section>h2{font-size:1.5rem; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:24px}
+.section-note{color:var(--text-secondary); font-size:.8125rem; margin:-12px 0 20px}
+.grid{display:grid; gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+
+.card{
+  background:var(--bg-surface); border:1px solid var(--border);
+  border-radius:var(--radius-lg); box-shadow:var(--shadow-card); padding:20px;
+}
+.card h3{font-size:1rem; margin-bottom:14px}
+.card .sub{font-size:.75rem; color:var(--text-muted)}
+
+/* ================= PALETTE ================= */
+.swatch{border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border)}
+.swatch .chip{height:64px}
+.swatch .meta{padding:8px 12px; background:var(--bg-surface); font-size:.75rem}
+.swatch .meta b{display:block; font-size:.8125rem}
+.swatch .meta span{font-family:var(--font-data); color:var(--text-muted)}
+
+/* ================= TYPO ================= */
+.type-row{display:flex; gap:20px; align-items:baseline; padding:14px 0; border-bottom:1px dashed var(--border)}
+.type-row:last-child{border-bottom:0}
+.type-row .label{width:170px; flex:none; font-family:var(--font-data); font-size:.72rem; color:var(--text-muted)}
+html[dir="rtl"] .type-row .label{text-align:left}
+
+/* ================= BOUTONS ================= */
+.btn{
+  display:inline-flex; align-items:center; gap:8px; border-radius:var(--radius-md);
+  font:inherit; font-size:.875rem; font-weight:600; padding:9px 18px; cursor:pointer;
+  border:1px solid transparent; transition:all .14s var(--ease);
+}
+.btn:disabled{opacity:.45; cursor:not-allowed}
+.btn-primary{background:var(--brand-primary-600); color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--brand-primary-700); transform:translateY(-1px)}
+.btn-secondary{background:var(--bg-surface); color:var(--text-primary); border-color:var(--border-strong)}
+.btn-secondary:hover:not(:disabled){border-color:var(--brand-primary-600); color:var(--brand-primary-600)}
+.btn-ghost{background:transparent; color:var(--link)}
+.btn-ghost:hover{background:var(--brand-primary-050)}
+.btn-danger{background:var(--status-nonconforme); color:#fff}
+.btn-sm{padding:5px 12px; font-size:.8125rem; border-radius:var(--radius-sm)}
+.btn-lg{padding:12px 24px; font-size:.9375rem}
+.btn svg{width:16px; height:16px; flex:none}
+html[dir="rtl"] .btn .chev{transform:scaleX(-1)}
+
+/* ================= BADGES ================= */
+.badge{
+  display:inline-flex; align-items:center; gap:6px;
+  border-radius:var(--radius-pill); padding:3px 11px;
+  font-size:.75rem; font-weight:600; line-height:1.5; white-space:nowrap;
+}
+.badge::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.b-conforme{color:var(--status-conforme); background:var(--status-conforme-bg)}
+.b-partiel{color:var(--status-partiel); background:var(--status-partiel-bg)}
+.b-nonconforme{color:var(--status-nonconforme); background:var(--status-nonconforme-bg)}
+.b-manquant{color:var(--status-manquant); background:var(--status-manquant-bg)}
+.b-averifier{color:var(--status-averifier); background:var(--status-averifier-bg)}
+.badge.sev{border-radius:var(--radius-sm); color:#fff}
+.badge.sev::before{display:none}
+.s-critique{background:var(--severity-critique)} .s-eleve{background:var(--severity-eleve)}
+.s-moyen{background:var(--severity-moyen)} .s-faible{background:var(--severity-faible)}
+
+/* ================= FORMULAIRES ================= */
+.field{margin-bottom:18px}
+.field label{display:block; font-size:.8125rem; font-weight:600; margin-bottom:6px}
+.field .req{color:var(--status-nonconforme)}
+.input, select.input, textarea.input{
+  width:100%; font:inherit; font-size:.875rem; color:var(--text-primary);
+  background:var(--bg-surface); border:1px solid var(--border-strong);
+  border-radius:var(--radius-md); padding:9px 12px; transition:border-color .14s;
+}
+.input:focus{border-color:var(--brand-primary-600); outline:2px solid color-mix(in srgb,var(--focus) 30%,transparent); outline-offset:0}
+.field .help{font-size:.75rem; color:var(--text-muted); margin-top:5px}
+.field.error .input{border-color:var(--status-nonconforme)}
+.field.error .help{color:var(--status-nonconforme); font-weight:500}
+.check{display:flex; align-items:center; gap:9px; font-size:.875rem; padding:5px 0; cursor:pointer}
+.check input{width:16px; height:16px; accent-color:var(--brand-primary-600)}
+.switch{position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer; font-size:.875rem}
+.switch input{position:absolute; opacity:0}
+.switch .track{width:38px; height:21px; border-radius:var(--radius-pill); background:var(--border-strong); transition:background .14s; flex:none}
+.switch .track::after{content:""; position:absolute; top:3px; inset-inline-start:3px; width:15px; height:15px; border-radius:50%; background:#fff; transition:transform .14s var(--ease)}
+.switch input:checked+.track{background:var(--status-conforme)}
+.switch input:checked+.track::after{transform:translateX(17px)}
+html[dir="rtl"] .switch input:checked+.track::after{transform:translateX(-17px)}
+
+/* ================= KPI ================= */
+.kpi{position:relative; overflow:hidden}
+.kpi .val{font-size:1.875rem; font-weight:700; font-family:var(--font-data)}
+.kpi .lbl{font-size:.8125rem; color:var(--text-secondary); font-weight:500}
+.kpi .delta{font-size:.75rem; font-weight:600}
+.kpi::before{content:""; position:absolute; inset-block:0; inset-inline-start:0; width:4px; background:var(--kpi-accent,var(--brand-primary-600))}
+
+/* ================= SCORE ================= */
+.score-wrap{display:flex; gap:28px; align-items:center; flex-wrap:wrap}
+.gauge{position:relative; width:168px; height:168px; flex:none}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .num{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.gauge .num b{font-size:2.25rem; font-family:var(--font-data); line-height:1}
+.gauge .num span{font-size:.72rem; color:var(--text-muted); margin-top:4px}
+.scale{display:flex; border-radius:var(--radius-pill); overflow:hidden; height:10px; margin-top:10px}
+.scale i{flex:1}
+.legend{display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:.75rem; color:var(--text-secondary)}
+.legend i{display:inline-block; width:9px; height:9px; border-radius:2px; margin-inline-end:5px}
+
+/* ================= PROGRESS DOMAINES ================= */
+.dom{display:grid; grid-template-columns:170px 1fr 44px; gap:12px; align-items:center; padding:7px 0; font-size:.8125rem}
+.dom .bar{height:8px; border-radius:var(--radius-pill); background:var(--bg-sunken); overflow:hidden}
+.dom .bar i{display:block; height:100%; border-radius:inherit; background:var(--brand-primary-600); transition:width .6s var(--ease)}
+.dom .pct{font-family:var(--font-data); color:var(--text-secondary); text-align:end}
+
+/* ================= TABLE ================= */
+.table-card{padding:0; overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%; border-collapse:collapse; font-size:.8125rem; min-width:680px}
+thead th{
+  background:var(--bg-sunken); color:var(--text-secondary); font-weight:600;
+  text-align:start; padding:10px 16px; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+  border-bottom:1px solid var(--border);
+}
+tbody td{padding:12px 16px; border-bottom:1px solid var(--border); vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--brand-primary-050)}
+td .tname{font-weight:600}
+td .tsub{font-size:.72rem; color:var(--text-muted)}
+
+/* ================= WORKFLOW / TIMELINE ================= */
+.flow{display:flex; align-items:flex-start; overflow-x:auto; padding:8px 0}
+.step{flex:1; min-width:96px; text-align:center; position:relative; font-size:.72rem; color:var(--text-muted)}
+.step .dot{
+  width:26px; height:26px; border-radius:50%; margin:0 auto 8px; position:relative; z-index:1;
+  background:var(--bg-surface); border:2px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.7rem;
+}
+.step:not(:last-child)::after{
+  content:""; position:absolute; top:13px; inset-inline-start:50%; width:100%; height:2px; background:var(--border-strong);
+}
+.step.done .dot{background:var(--status-conforme); border-color:var(--status-conforme); color:#fff}
+.step.done:not(:last-child)::after{background:var(--status-conforme)}
+.step.done{color:var(--text-secondary)}
+.step.now .dot{border-color:var(--brand-primary-600); color:var(--brand-primary-600); box-shadow:0 0 0 5px color-mix(in srgb,var(--brand-primary-600) 18%,transparent)}
+.step.now{color:var(--brand-primary-600); font-weight:700}
+
+/* ================= ALERTES ================= */
+.alert{display:flex; gap:12px; padding:13px 16px; border-radius:var(--radius-md); font-size:.8125rem; border:1px solid; margin-bottom:12px}
+.alert b{display:block}
+.a-info{background:var(--brand-primary-050); border-color:color-mix(in srgb,var(--brand-primary-600) 30%,transparent); color:var(--text-primary)}
+.a-warn{background:var(--status-partiel-bg); border-color:color-mix(in srgb,var(--status-partiel) 40%,transparent)}
+.a-err{background:var(--status-nonconforme-bg); border-color:color-mix(in srgb,var(--status-nonconforme) 40%,transparent)}
+.a-ok{background:var(--status-conforme-bg); border-color:color-mix(in srgb,var(--status-conforme) 40%,transparent)}
+.alert .ic{flex:none; width:18px; height:18px; margin-top:2px}
+
+/* ================= ENCART IA ================= */
+.ai-card{
+  border:1px dashed var(--status-averifier); background:var(--status-averifier-bg);
+  border-radius:var(--radius-lg); padding:16px 18px;
+}
+.ai-card .tag{
+  display:inline-flex; align-items:center; gap:6px; font-size:.7rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--status-averifier); margin-bottom:8px;
+}
+.ai-card .actions{margin-top:12px; display:flex; gap:8px; flex-wrap:wrap}
+
+/* ================= TABS ================= */
+.tabs{display:flex; gap:2px; border-bottom:1px solid var(--border); overflow-x:auto}
+.tab{
+  font:inherit; font-size:.875rem; font-weight:600; color:var(--text-secondary);
+  background:none; border:0; border-bottom:2px solid transparent;
+  padding:9px 16px; cursor:pointer; white-space:nowrap;
+}
+.tab[aria-selected="true"]{color:var(--brand-primary-600); border-bottom-color:var(--brand-primary-600)}
+.tab:hover{color:var(--text-primary)}
+
+/* ================= SIDEBAR PREVIEW ================= */
+.sidebar-demo{
+  background:var(--bg-sidebar); border-radius:var(--radius-lg); padding:18px 12px;
+  color:var(--text-on-dark); max-width:250px;
+}
+.nav-item{
+  display:flex; align-items:center; gap:11px; padding:9px 12px; border-radius:var(--radius-md);
+  font-size:.875rem; color:#B9C7DB; cursor:pointer; transition:background .14s;
+}
+.nav-item:hover{background:rgba(255,255,255,.07); color:#fff}
+.nav-item.active{background:var(--brand-primary-600); color:#fff; font-weight:600}
+.nav-item svg{width:17px; height:17px; flex:none}
+.nav-sec{font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:#5F7396; padding:14px 12px 6px}
+
+footer{margin-top:80px; padding-top:24px; border-top:1px solid var(--border); color:var(--text-muted); font-size:.75rem}
+
+/* ================= EXTENSIONS CHAMIL ================= */
+/* États commerciaux — alias sémantiques sur la palette MRAFIQ */
+.b-valide{color:var(--status-conforme); background:var(--status-conforme-bg)}
+.b-attente{color:var(--status-partiel); background:var(--status-partiel-bg)}
+.b-retard{color:var(--status-nonconforme); background:var(--status-nonconforme-bg)}
+.b-brouillon{color:var(--status-manquant); background:var(--status-manquant-bg)}
+.b-traitement{color:var(--status-averifier); background:var(--status-averifier-bg)}
+
+/* Montants */
+.amount{font-family:var(--font-data); direction:ltr; unicode-bidi:isolate; font-weight:600; white-space:nowrap}
+.amount.pos{color:var(--status-conforme)} .amount.neg{color:var(--status-nonconforme)}
+td.num{text-align:end; font-family:var(--font-data); direction:ltr; unicode-bidi:isolate}
+
+/* Mini graphique (aperçu Recharts) */
+.chartbox{display:flex; align-items:flex-end; gap:10px; height:150px; padding-top:8px}
+.chartbox .col{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:6px; height:100%}
+.chartbox .bar{width:100%; max-width:42px; border-radius:var(--radius-sm) var(--radius-sm) 0 0; background:var(--brand-primary-600)}
+.chartbox .bar.alt{background:var(--brand-primary-100); border:1px solid var(--brand-primary-500)}
+.chartbox .cl{font-size:.68rem; color:var(--text-muted); font-family:var(--font-data)}
+
+/* En-tête de profil */
+.profile-head{
+  display:flex; gap:20px; align-items:center; flex-wrap:wrap;
+  background:var(--bg-sidebar); color:var(--text-on-dark);
+  border-radius:var(--radius-lg); padding:22px 24px; border-bottom:3px solid var(--brand-brass-500);
+}
+.avatar{
+  width:84px; height:84px; border-radius:50%; flex:none;
+  background:var(--brand-primary-600); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.9rem; font-weight:700; border:3px solid var(--brand-brass-500);
+}
+.profile-head .who b{font-size:1.25rem; display:block}
+.profile-head .who .role{color:var(--brand-brass-300); font-size:.82rem; font-weight:600; letter-spacing:.06em; text-transform:uppercase}
+.profile-head .who .meta{color:#B9C7DB; font-size:.8rem; margin-top:6px}
+.profile-head .sp{flex:1}
+
+/* Paires clé / valeur (lecture seule) */
+.kv{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px 22px}
+.kv .k{font-size:.72rem; color:var(--text-muted); letter-spacing:.06em; text-transform:uppercase}
+.kv .v{font-size:.875rem; font-weight:500; margin-top:2px}
+
+/* Identité documentaire */
+.stamp{
+  border:1px dashed var(--border-strong); border-radius:var(--radius-md);
+  padding:18px; text-align:center; color:var(--text-muted); font-size:.75rem; background:var(--bg-sunken);
+}
+.stamp b{display:block; color:var(--text-secondary); font-size:.8125rem; margin-bottom:4px}
+
+/* Tableau comparatif fournisseurs */
+tr.best td{background:var(--status-conforme-bg)}
+tr.best td:first-child{box-shadow:inset 3px 0 0 var(--status-conforme)}
+html[dir="rtl"] tr.best td:first-child{box-shadow:inset -3px 0 0 var(--status-conforme)}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wordmark">
+    <span class="ar">شـامل</span>
+    <span class="lat">CHAMIL</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="toggle-group" role="group" aria-label="Préférences d'affichage">
+    <button class="toggle" id="btnLang" aria-pressed="false">AR | FR</button>
+    <button class="toggle" id="btnTheme" aria-pressed="false" data-i18n="theme">Mode sombre</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">Design System · v1.0 · aligné MRAFIQ</span>
+    <h1 data-i18n="heroTitle">Système de design CHAMIL</h1>
+    <p data-i18n="heroSub">Fondations visuelles du module global ACHATS &amp; VENTES : fournisseurs, achats, stock, clients, ventes, documents et paiements. Bilingue FR/AR, RTL natif, modes clair et sombre, accessible.</p>
+  </div>
+
+  <!-- ============ 1. MARQUE ============ -->
+  <section id="marque">
+    <h2 data-i18n="sBrand">1 · Marque</h2>
+    <p class="section-note" data-i18n="sBrandNote">Mêmes fondations que MRAFIQ : le mot arabe domine, le laiton reste réservé à la marque et n'apparaît jamais dans les composants fonctionnels.</p>
+    <div class="grid g2">
+      <div class="card" style="background:var(--bg-sidebar); color:var(--text-on-dark); text-align:center; padding:40px 20px; border-bottom:3px solid var(--brand-brass-500)">
+        <div style="font-family:var(--font-arabic); font-size:2.8rem; font-weight:700">شـامل</div>
+        <div style="letter-spacing:.4em; font-size:.9rem; color:var(--brand-brass-300); font-weight:600; margin-top:4px">CHAMIL</div>
+        <div style="font-size:.78rem; color:#B9C7DB; margin-top:14px; font-family:var(--font-arabic)">نظام متكامل لتسيير المشتريات والمبيعات والمخزون</div>
+      </div>
+      <div class="card" style="text-align:center; padding:40px 20px">
+        <div style="font-family:var(--font-arabic); font-size:2.8rem; font-weight:700; color:var(--brand-ink-800)">شـامل</div>
+        <div style="letter-spacing:.4em; font-size:.9rem; color:var(--brand-brass-500); font-weight:600; margin-top:4px">CHAMIL</div>
+        <div style="font-size:.78rem; color:var(--text-secondary); margin-top:14px" data-i18n="slogan">Système intégré de gestion des achats, des ventes, des stocks et des opérations commerciales</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. PALETTE ============ -->
+  <section id="palette">
+    <h2 data-i18n="sPalette">2 · Palette</h2>
+    <p class="section-note" data-i18n="sPaletteNote">Palette héritée de MRAFIQ sans modification. Seule la sémantique des états change : elle devient commerciale.</p>
+    <div class="card">
+      <h3 data-i18n="pBrand">Marque &amp; actions</h3>
+      <div class="grid g4">
+        <div class="swatch"><div class="chip" style="background:#081C33"></div><div class="meta"><b>Encre 900</b><span>#081C33</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#0B2545"></div><div class="meta"><b>Encre 800</b><span>#0B2545</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#14498F"></div><div class="meta"><b>Primaire 700</b><span>#14498F</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#1B5CB4"></div><div class="meta"><b>Primaire 600</b><span>#1B5CB4</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#2E74D6"></div><div class="meta"><b>Primaire 500</b><span>#2E74D6</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#DCE9FA"></div><div class="meta"><b>Primaire 100</b><span>#DCE9FA</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#B08A3C"></div><div class="meta"><b>Laiton 500</b><span>#B08A3C</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#D9BC7F"></div><div class="meta"><b>Laiton 300</b><span>#D9BC7F</span></div></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <h3 data-i18n="pStatus">États des opérations</h3>
+        <div style="display:flex; flex-direction:column; gap:9px; align-items:flex-start">
+          <span class="badge b-valide" data-i18n="stOk">Validé · Payé · Livré</span>
+          <span class="badge b-attente" data-i18n="stWait">En attente · Partiel</span>
+          <span class="badge b-retard" data-i18n="stLate">Impayé · En retard · Rupture</span>
+          <span class="badge b-brouillon" data-i18n="stDraft">Brouillon · Annulé</span>
+          <span class="badge b-traitement" data-i18n="stProc">À valider · En traitement</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="pSev">Urgence &amp; priorité</h3>
+        <div style="display:flex; flex-direction:column; gap:9px; align-items:flex-start">
+          <span class="badge sev s-critique" data-i18n="svCrit">Critique</span>
+          <span class="badge sev s-eleve" data-i18n="svHigh">Élevée</span>
+          <span class="badge sev s-moyen" data-i18n="svMed">Moyenne</span>
+          <span class="badge sev s-faible" data-i18n="svLow">Faible</span>
+        </div>
+        <p class="sub" style="margin-top:14px" data-i18n="pSevNote">Rectangle plein pour l'urgence, pastille arrondie pour l'état : les deux ne se confondent jamais.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. TYPOGRAPHIE ============ -->
+  <section id="typo">
+    <h2 data-i18n="sType">3 · Typographie</h2>
+    <p class="section-note">IBM Plex Sans (FR) · IBM Plex Sans Arabic (AR) · IBM Plex Mono (montants, codes, références, numéros de série, dates)</p>
+    <div class="card">
+      <div class="type-row"><span class="label">3xl · 40px · 700</span><span style="font-size:2.5rem; font-weight:700" class="data">12 480 000 DA</span></div>
+      <div class="type-row"><span class="label">xl · 24px · 700</span><span style="font-size:1.5rem; font-weight:700" data-i18n="tPage">Factures clients</span></div>
+      <div class="type-row"><span class="label">lg · 20px · 600</span><span style="font-size:1.25rem; font-weight:600" data-i18n="tCard">Fiche fournisseur — SARL Bureautique Alger</span></div>
+      <div class="type-row"><span class="label">base · 15px · 400</span><span data-i18n="tBody">Chaque opération est reliée à son origine : du fournisseur au paiement, la chaîne reste traçable.</span></div>
+      <div class="type-row"><span class="label">sm · 13px · 400</span><span style="font-size:.8125rem; color:var(--text-secondary)" data-i18n="tSmall">Dernière modification par K. Benali le 12/08/2026 à 14:32.</span></div>
+      <div class="type-row"><span class="label">data · mono</span><span class="data" style="font-size:.8125rem">FA-2026-0417 · BL-2026-0392 · SN : CN8XK21044 · 19 % TVA</span></div>
+      <div class="type-row"><span class="label">arabic · 17px · 400</span><span style="font-family:var(--font-arabic); font-size:1.0625rem; direction:rtl; unicode-bidi:isolate">كل عملية مرتبطة بمصدرها: من المورّد إلى الدفع، تبقى السلسلة قابلة للتتبع.</span></div>
+    </div>
+    <p class="section-note" style="margin-top:14px" data-i18n="typoNote">Règle stricte : montants, quantités, dates et références toujours en IBM Plex Mono et en direction gauche → droite, y compris dans l'interface arabe.</p>
+  </section>
+
+  <!-- ============ 4. BOUTONS ============ -->
+  <section id="boutons">
+    <h2 data-i18n="sBtn">4 · Boutons</h2>
+    <div class="card">
+      <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+        <button class="btn btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          <span data-i18n="bNew">Nouveau devis</span>
+        </button>
+        <button class="btn btn-primary btn-lg" data-i18n="bGen">Transformer en commande</button>
+        <button class="btn btn-secondary" data-i18n="bExport">Exporter la facture PDF</button>
+        <button class="btn btn-ghost">
+          <span data-i18n="bSee">Voir la fiche client</span>
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn btn-danger btn-sm" data-i18n="bDel">Annuler</button>
+        <button class="btn btn-primary" disabled data-i18n="bDisabled">Validation requise</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. FORMULAIRES ============ -->
+  <section id="form">
+    <h2 data-i18n="sForm">5 · Formulaires</h2>
+    <div class="grid g2">
+      <div class="card">
+        <h3 data-i18n="fSup">Fiche fournisseur</h3>
+        <div class="field">
+          <label data-i18n="fName">Raison sociale <span class="req">*</span></label>
+          <input class="input" value="SARL Bureautique Alger">
+        </div>
+        <div class="field">
+          <label data-i18n="fWilaya">Wilaya</label>
+          <select class="input"><option>16 — Alger</option><option>31 — Oran</option><option>25 — Constantine</option></select>
+        </div>
+        <div class="field error">
+          <label data-i18n="fRC">Registre de commerce <span class="req">*</span></label>
+          <input class="input" value="16/00-00">
+          <div class="help" data-i18n="fRCerr">Format invalide. Exemple attendu : 16/00-1234567B26.</div>
+        </div>
+        <div class="field">
+          <label data-i18n="fPay">Conditions de paiement</label>
+          <select class="input"><option>Comptant</option><option>30 jours</option><option>60 jours</option></select>
+        </div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="fProd">Ligne de commande</h3>
+        <div class="field">
+          <label data-i18n="fItem">Produit</label>
+          <select class="input"><option>Imprimante HP LaserJet M404</option><option>Switch 24 ports</option></select>
+        </div>
+        <div class="grid g2" style="gap:12px">
+          <div class="field"><label data-i18n="fQty">Quantité</label><input class="input data" value="12"></div>
+          <div class="field"><label data-i18n="fPrice">Prix unitaire HT</label><input class="input data" value="85 000,00"></div>
+        </div>
+        <div class="field">
+          <label data-i18n="fVat">TVA</label>
+          <select class="input"><option>19 %</option><option>9 %</option><option>0 %</option></select>
+        </div>
+        <label class="switch" style="margin-bottom:12px">
+          <input type="checkbox" checked><span class="track"></span>
+          <span data-i18n="fSwitch1">Mettre à jour le stock à la réception</span>
+        </label>
+        <label class="check"><input type="checkbox"><span data-i18n="fSwitch2">Notifier le fournisseur par e-mail</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. TABLEAU DE BORD ============ -->
+  <section id="dash">
+    <h2 data-i18n="sDash">6 · Tableau de bord — KPI, graphiques &amp; score</h2>
+    <div class="grid g4">
+      <div class="card kpi"><div class="lbl" data-i18n="k1">Chiffre d'affaires du mois</div><div class="val">8 420 000</div><div class="delta" style="color:var(--status-conforme)">+12,4 %</div></div>
+      <div class="card kpi" style="--kpi-accent:var(--status-partiel)"><div class="lbl" data-i18n="k2">Créances clients</div><div class="val">3 156 000</div><div class="delta" style="color:var(--status-partiel)" data-i18n="k2d">dont 41 % à +90 jours</div></div>
+      <div class="card kpi" style="--kpi-accent:var(--status-nonconforme)"><div class="lbl" data-i18n="k3">Factures impayées</div><div class="val">27</div><div class="delta" style="color:var(--status-nonconforme)" data-i18n="k3d">9 en retard critique</div></div>
+      <div class="card kpi" style="--kpi-accent:var(--status-conforme)"><div class="lbl" data-i18n="k4">Valeur du stock</div><div class="val">14 903 500</div><div class="delta" data-i18n="k4d">6 produits en rupture</div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <h3 data-i18n="chartTitle">Achats vs Ventes — 6 mois</h3>
+        <div class="chartbox">
+          <div class="col"><div class="bar" style="height:38%"></div><div class="bar alt" style="height:0"></div><div class="cl">Mar</div></div>
+          <div class="col"><div class="bar" style="height:52%"></div><div class="cl">Avr</div></div>
+          <div class="col"><div class="bar" style="height:46%"></div><div class="cl">Mai</div></div>
+          <div class="col"><div class="bar" style="height:71%"></div><div class="cl">Juin</div></div>
+          <div class="col"><div class="bar" style="height:64%"></div><div class="cl">Juil</div></div>
+          <div class="col"><div class="bar" style="height:88%"></div><div class="cl">Août</div></div>
+        </div>
+        <p class="sub" style="margin-top:10px" data-i18n="chartNote">Rendu final avec Recharts. Grille discrète, une seule couleur d'accent, infobulle au survol.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="scoreTitle">Score fournisseur — SARL Bureautique Alger</h3>
+        <div class="score-wrap">
+          <div class="gauge">
+            <svg width="168" height="168" viewBox="0 0 168 168">
+              <circle cx="84" cy="84" r="72" fill="none" stroke="var(--bg-sunken)" stroke-width="14"></circle>
+              <circle id="gaugeArc" cx="84" cy="84" r="72" fill="none" stroke="var(--score-bon)" stroke-width="14"
+                      stroke-linecap="round" stroke-dasharray="452.4" stroke-dashoffset="72.4"></circle>
+            </svg>
+            <div class="num"><b>84</b><span data-i18n="scoreLvl">Bon</span></div>
+          </div>
+          <div style="flex:1; min-width:200px">
+            <div class="dom"><span data-i18n="d1">Prix</span><span class="bar"><i style="width:88%"></i></span><span class="pct">88</span></div>
+            <div class="dom"><span data-i18n="d2">Délai</span><span class="bar"><i style="width:74%"></i></span><span class="pct">74</span></div>
+            <div class="dom"><span data-i18n="d3">Qualité</span><span class="bar"><i style="width:91%"></i></span><span class="pct">91</span></div>
+            <div class="dom"><span data-i18n="d4">Disponibilité</span><span class="bar"><i style="width:69%"></i></span><span class="pct">69</span></div>
+            <div class="dom"><span data-i18n="d5">Garanties</span><span class="bar"><i style="width:80%"></i></span><span class="pct">80</span></div>
+            <div class="scale">
+              <i style="background:var(--score-critique)"></i><i style="background:var(--score-faible)"></i>
+              <i style="background:var(--score-inter)"></i><i style="background:var(--score-bon)"></i>
+              <i style="background:var(--score-tresbon)"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. TABLEAUX ============ -->
+  <section id="tables">
+    <h2 data-i18n="sTable">7 · Tableaux de données</h2>
+    <div class="tabs" role="tablist" style="margin-bottom:16px">
+      <button class="tab" role="tab" aria-selected="true" data-i18n="tabAll">Toutes (312)</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="tabWait">En attente (48)</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="tabLate">En retard (27)</button>
+    </div>
+    <div class="card table-card">
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th data-i18n="thDoc">Document</th><th data-i18n="thClient">Client</th>
+            <th data-i18n="thAmount">Montant TTC</th><th data-i18n="thDue">Échéance</th><th data-i18n="thStatus">Statut</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="tname data">FA-2026-0417</span><span class="tsub" data-i18n="r1s">Bon de livraison BL-0392</span></td>
+              <td data-i18n="r1c">Direction des Impôts — Alger</td>
+              <td class="num">1 245 600,00</td><td class="num">2026-09-12</td>
+              <td><span class="badge b-attente" data-i18n="stWait2">En attente</span></td>
+            </tr>
+            <tr>
+              <td><span class="tname data">FA-2026-0402</span><span class="tsub" data-i18n="r2s">Commande CL-0355</span></td>
+              <td data-i18n="r2c">SPA Sonelgaz Distribution</td>
+              <td class="num">3 890 000,00</td><td class="num">2026-07-30</td>
+              <td><span class="badge b-retard" data-i18n="stLate2">En retard</span></td>
+            </tr>
+            <tr>
+              <td><span class="tname data">FA-2026-0388</span><span class="tsub" data-i18n="r3s">Marché MP-2026-14</span></td>
+              <td data-i18n="r3c">EPH Zéralda</td>
+              <td class="num">742 300,00</td><td class="num">2026-08-01</td>
+              <td><span class="badge b-valide" data-i18n="stPaid">Payée</span></td>
+            </tr>
+            <tr>
+              <td><span class="tname data">DEV-2026-0121</span><span class="tsub" data-i18n="r4s">Devis non converti</span></td>
+              <td data-i18n="r4c">SARL Medina Informatique</td>
+              <td class="num">516 000,00</td><td class="num">—</td>
+              <td><span class="badge b-brouillon" data-i18n="stDraft2">Brouillon</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card table-card" style="margin-top:16px">
+      <div style="padding:16px 20px 0"><h3 data-i18n="cmpTitle">Tableau comparatif des offres fournisseurs — Imprimante HP LaserJet M404</h3></div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr>
+            <th data-i18n="thSup">Fournisseur</th><th data-i18n="thUnit">Prix unitaire HT</th>
+            <th data-i18n="thDelay">Délai</th><th data-i18n="thWar">Garantie</th><th data-i18n="thCond">Conditions</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>Fournisseur A</td><td class="num">85 000,00</td><td class="num">7 j</td><td class="num">12 mois</td><td data-i18n="c1">Comptant</td></tr>
+            <tr class="best"><td>Fournisseur B</td><td class="num">82 500,00</td><td class="num">5 j</td><td class="num">24 mois</td><td data-i18n="c2">30 jours</td></tr>
+            <tr><td>Fournisseur C</td><td class="num">87 000,00</td><td class="num">3 j</td><td class="num">12 mois</td><td data-i18n="c3">60 jours</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. WORKFLOWS ============ -->
+  <section id="flow">
+    <h2 data-i18n="sFlow">8 · Workflows commerciaux</h2>
+    <div class="card">
+      <h3 data-i18n="flowBuy">Achats</h3>
+      <div class="flow">
+        <div class="step done"><div class="dot">✓</div><span data-i18n="wb1">Demande</span></div>
+        <div class="step done"><div class="dot">✓</div><span data-i18n="wb2">Consultation</span></div>
+        <div class="step done"><div class="dot">✓</div><span data-i18n="wb3">Offre</span></div>
+        <div class="step now"><div class="dot">4</div><span data-i18n="wb4">Commande</span></div>
+        <div class="step"><div class="dot">5</div><span data-i18n="wb5">Réception</span></div>
+        <div class="step"><div class="dot">6</div><span data-i18n="wb6">Facture</span></div>
+        <div class="step"><div class="dot">7</div><span data-i18n="wb7">Paiement</span></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3 data-i18n="flowSell">Ventes</h3>
+      <div class="flow">
+        <div class="step done"><div class="dot">✓</div><span data-i18n="ws1">Prospect</span></div>
+        <div class="step done"><div class="dot">✓</div><span data-i18n="ws2">Devis</span></div>
+        <div class="step done"><div class="dot">✓</div><span data-i18n="ws3">Commande</span></div>
+        <div class="step done"><div class="dot">✓</div><span data-i18n="ws4">Préparation</span></div>
+        <div class="step now"><div class="dot">5</div><span data-i18n="ws5">Livraison</span></div>
+        <div class="step"><div class="dot">6</div><span data-i18n="ws6">Facture</span></div>
+        <div class="step"><div class="dot">7</div><span data-i18n="ws7">Paiement</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9. ALERTES ============ -->
+  <section id="alerts">
+    <h2 data-i18n="sAlert">9 · Centre d'alertes</h2>
+    <div class="alert a-err">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16h.01"/></svg>
+      <div><b data-i18n="alErr">Facture impayée</b><span data-i18n="alErrTxt">FA-2026-0402 — SPA Sonelgaz : 3 890 000 DA en retard de 25 jours.</span></div>
+    </div>
+    <div class="alert a-warn">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>
+      <div><b data-i18n="alWarn">Stock faible</b><span data-i18n="alWarnTxt">6 produits sous le seuil minimum, dont 2 en rupture totale.</span></div>
+    </div>
+    <div class="alert a-info">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+      <div><b data-i18n="alInfo">Garantie proche de l'expiration</b><span data-i18n="alInfoTxt">14 équipements livrés en 2024 arrivent en fin de garantie dans 30 jours.</span></div>
+    </div>
+    <div class="alert a-ok">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      <div><b data-i18n="alOk">Réception validée</b><span data-i18n="alOkTxt">BR-2026-0188 : 12 imprimantes reçues, stock mis à jour automatiquement.</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 10. NAVIGATION ============ -->
+  <section id="nav">
+    <h2 data-i18n="sNav">10 · Navigation</h2>
+    <div class="grid g2">
+      <div class="sidebar-demo">
+        <div class="nav-sec" data-i18n="nSec1">Pilotage</div>
+        <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 8h6V4h-6z"/></svg><span data-i18n="n1">Tableau de bord</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span data-i18n="n2">Statistiques</span></div>
+        <div class="nav-sec" data-i18n="nSec2">Achats</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/></svg><span data-i18n="n3">Fournisseurs</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg><span data-i18n="n4">Commandes &amp; réceptions</span></div>
+        <div class="nav-sec" data-i18n="nSec3">Ventes</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M5 20a7 7 0 0114 0"/></svg><span data-i18n="n5">Clients</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h10v18l-5-3-5 3z"/></svg><span data-i18n="n6">Devis &amp; factures</span></div>
+        <div class="nav-sec" data-i18n="nSec4">Ressources</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8l8-4 8 4-8 4z"/><path d="M4 12l8 4 8-4M4 16l8 4 8-4"/></svg><span data-i18n="n7">Produits &amp; stock</span></div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.2"/><path d="M4.5 20a7.5 7.5 0 0115 0"/></svg><span data-i18n="n8">Profil</span></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="navNotes">Règles de navigation</h3>
+        <ul style="margin:0; padding-inline-start:18px; color:var(--text-secondary); font-size:.875rem; line-height:2">
+          <li data-i18n="nn1">Fond encre identique en mode clair et sombre : repère stable.</li>
+          <li data-i18n="nn2">Un seul élément actif à la fois, en bleu primaire plein.</li>
+          <li data-i18n="nn3">En arabe, la barre latérale bascule à droite : propriétés logiques uniquement.</li>
+          <li data-i18n="nn4">Trois sections métier : Achats, Ventes, Ressources — jamais plus de huit entrées visibles.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11. PAGE PROFIL ============ -->
+  <section id="profil">
+    <h2 data-i18n="sProfile">11 · Page profil — dirigeant &amp; entreprise</h2>
+    <p class="section-note" data-i18n="sProfileNote">Écran de référence de la section 39 du cahier des charges : informations personnelles du propriétaire, identité légale de l'entreprise, paramètres commerciaux, identité documentaire et sécurité.</p>
+
+    <div class="profile-head">
+      <div class="avatar">KB</div>
+      <div class="who">
+        <b>Karim Benali — كريم بن علي</b>
+        <span class="role" data-i18n="pRole">Propriétaire · Gérant</span>
+        <div class="meta" data-i18n="pMeta">SARL Bureautique Alger · Compte actif · Dernière connexion : 24/08/2026 à 09:14</div>
+      </div>
+      <div class="sp"></div>
+      <button class="btn btn-secondary btn-sm" data-i18n="pEdit">Modifier</button>
+    </div>
+
+    <div class="tabs" role="tablist" style="margin:20px 0 16px">
+      <button class="tab" role="tab" aria-selected="true" data-i18n="ptab1">Profil personnel</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="ptab2">Entreprise</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="ptab3">Paramètres commerciaux</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="ptab4">Sécurité</button>
+      <button class="tab" role="tab" aria-selected="false" data-i18n="ptab5">Journal d'activité</button>
+    </div>
+
+    <div class="grid g2">
+      <div class="card">
+        <h3 data-i18n="pPersonal">Informations personnelles</h3>
+        <div class="kv">
+          <div><div class="k" data-i18n="kName">Nom &amp; prénom</div><div class="v">Benali Karim</div></div>
+          <div><div class="k" data-i18n="kNameAr">الاسم واللقب</div><div class="v" style="font-family:var(--font-arabic)">بن علي كريم</div></div>
+          <div><div class="k" data-i18n="kBirth">Date de naissance</div><div class="v data">1978-04-19</div></div>
+          <div><div class="k" data-i18n="kPlace">Lieu de naissance</div><div class="v">Alger</div></div>
+          <div><div class="k" data-i18n="kNin">NIN</div><div class="v data">•••• •••• •••• 4821</div></div>
+          <div><div class="k" data-i18n="kQual">Qualité</div><div class="v" data-i18n="vQual">Propriétaire · Gérant</div></div>
+          <div><div class="k" data-i18n="kSince">Prise de fonction</div><div class="v data">2012-03-01</div></div>
+          <div><div class="k" data-i18n="kShare">Part du capital</div><div class="v data">100 %</div></div>
+          <div><div class="k" data-i18n="kPhone">Mobile</div><div class="v data">+213 •• •• •• 12</div></div>
+          <div><div class="k" data-i18n="kMail">Email personnel</div><div class="v data">k.benali@•••••.dz</div></div>
+        </div>
+        <div class="alert a-info" style="margin:18px 0 0">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+          <div><b data-i18n="privTitle">Données strictement privées</b><span data-i18n="privTxt">Visibles uniquement par le dirigeant et l'administrateur. Jamais reproduites sur un document commercial. Tout accès est journalisé (loi 18-07).</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 data-i18n="pCompany">Identité de l'entreprise</h3>
+        <div class="kv">
+          <div><div class="k" data-i18n="kComp">Raison sociale</div><div class="v">SARL Bureautique Alger</div></div>
+          <div><div class="k" data-i18n="kCompAr">التسمية</div><div class="v" style="font-family:var(--font-arabic)">ش.ذ.م.م للتجهيزات المكتبية</div></div>
+          <div><div class="k" data-i18n="kForm">Forme juridique</div><div class="v">SARL</div></div>
+          <div><div class="k" data-i18n="kCap">Capital social</div><div class="v data">5 000 000,00 DA</div></div>
+          <div><div class="k">RC</div><div class="v data">16/00-1234567B26</div></div>
+          <div><div class="k">NIF</div><div class="v data">000916123456789</div></div>
+          <div><div class="k">NIS</div><div class="v data">099816000123456</div></div>
+          <div><div class="k" data-i18n="kWil">Wilaya</div><div class="v">16 — Alger</div></div>
+        </div>
+        <h3 style="margin-top:22px" data-i18n="pDefaults">Paramètres par défaut</h3>
+        <div class="kv">
+          <div><div class="k" data-i18n="kVat">TVA</div><div class="v data">19 %</div></div>
+          <div><div class="k" data-i18n="kCur">Devise</div><div class="v data">DA</div></div>
+          <div><div class="k" data-i18n="kTerm">Règlement</div><div class="v" data-i18n="vTerm">30 jours</div></div>
+          <div><div class="k" data-i18n="kNum">Numérotation</div><div class="v data">FA-2026-0000</div></div>
+          <div><div class="k" data-i18n="kDocLang">Langue des documents</div><div class="v" data-i18n="vDocLang">Bilingue AR / FR</div></div>
+          <div><div class="k" data-i18n="kCredit">Plafond de crédit</div><div class="v data">2 000 000,00 DA</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g3" style="margin-top:16px">
+      <div class="card"><h3 data-i18n="pIdent">Identité documentaire</h3><div class="stamp"><b data-i18n="stLogo">Logo</b><span data-i18n="stLogoTxt">Affiché en en-tête de tous les PDF</span></div></div>
+      <div class="card"><h3 data-i18n="pStamp">Cachet</h3><div class="stamp"><b data-i18n="stStamp">Cachet numérisé</b><span data-i18n="stStampTxt">Apposé sur factures, BL et reçus</span></div></div>
+      <div class="card"><h3 data-i18n="pSign">Signature</h3><div class="stamp"><b data-i18n="stSign">Signature du gérant</b><span data-i18n="stSignTxt">Insérée automatiquement, version AR et FR</span></div></div>
+    </div>
+
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <h3 data-i18n="pSec">Sécurité du compte</h3>
+        <label class="switch" style="margin-bottom:14px"><input type="checkbox" checked><span class="track"></span><span data-i18n="sec1">Authentification à deux facteurs (2FA)</span></label>
+        <label class="switch" style="margin-bottom:14px"><input type="checkbox" checked><span class="track"></span><span data-i18n="sec2">Alerte en cas de connexion inhabituelle</span></label>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:6px">
+          <button class="btn btn-secondary btn-sm" data-i18n="sec3">Changer le mot de passe</button>
+          <button class="btn btn-danger btn-sm" data-i18n="sec4">Fermer les autres sessions</button>
+        </div>
+      </div>
+      <div class="card table-card">
+        <div style="padding:16px 20px 0"><h3 data-i18n="pLog">Journal d'activité</h3></div>
+        <div class="table-scroll">
+          <table style="min-width:0">
+            <thead><tr><th data-i18n="thAct">Action</th><th data-i18n="thWhen">Date</th><th data-i18n="thIp">Appareil</th></tr></thead>
+            <tbody>
+              <tr><td data-i18n="lg1">Validation facture FA-2026-0417</td><td class="num">2026-08-24 09:41</td><td class="data">Windows · Chrome</td></tr>
+              <tr><td data-i18n="lg2">Modification du taux de TVA par défaut</td><td class="num">2026-08-22 16:07</td><td class="data">Windows · Chrome</td></tr>
+              <tr><td data-i18n="lg3">Création de l'utilisateur « Commercial 02 »</td><td class="num">2026-08-20 11:23</td><td class="data">Android · Mobile</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p data-i18n="foot">CHAMIL — شـامل · Design System v1.0 · fondations héritées de MRAFIQ · IBM Plex · FR / AR · clair &amp; sombre · WCAG AA</p>
+  </footer>
+</div>
+
+<script>
+/* ---------- Thème ---------- */
+const btnTheme = document.getElementById('btnTheme');
+btnTheme.addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute('data-theme') !== 'dark';
+  root.setAttribute('data-theme', dark ? 'dark' : 'light');
+  btnTheme.setAttribute('aria-pressed', String(dark));
+  applyLang(currentLang);
+});
+
+/* ---------- i18n FR / AR ---------- */
+const I18N = {
+  fr: {
+    theme: () => document.documentElement.getAttribute('data-theme')==='dark' ? 'Mode clair' : 'Mode sombre',
+    heroTitle:'Système de design CHAMIL',
+    heroSub:"Fondations visuelles du module global ACHATS & VENTES : fournisseurs, achats, stock, clients, ventes, documents et paiements. Bilingue FR/AR, RTL natif, modes clair et sombre, accessible.",
+    sBrand:'1 · Marque', sBrandNote:"Mêmes fondations que MRAFIQ : le mot arabe domine, le laiton reste réservé à la marque et n'apparaît jamais dans les composants fonctionnels.",
+    slogan:'Système intégré de gestion des achats, des ventes, des stocks et des opérations commerciales',
+    sPalette:'2 · Palette', sPaletteNote:'Palette héritée de MRAFIQ sans modification. Seule la sémantique des états change : elle devient commerciale.',
+    pBrand:'Marque & actions', pStatus:'États des opérations', pSev:'Urgence & priorité',
+    pSevNote:"Rectangle plein pour l'urgence, pastille arrondie pour l'état : les deux ne se confondent jamais.",
+    stOk:'Validé · Payé · Livré', stWait:'En attente · Partiel', stLate:'Impayé · En retard · Rupture',
+    stDraft:'Brouillon · Annulé', stProc:'À valider · En traitement',
+    svCrit:'Critique', svHigh:'Élevée', svMed:'Moyenne', svLow:'Faible',
+    sType:'3 · Typographie', tPage:'Factures clients', tCard:'Fiche fournisseur — SARL Bureautique Alger',
+    tBody:"Chaque opération est reliée à son origine : du fournisseur au paiement, la chaîne reste traçable.",
+    tSmall:'Dernière modification par K. Benali le 12/08/2026 à 14:32.',
+    typoNote:'Règle stricte : montants, quantités, dates et références toujours en IBM Plex Mono et en direction gauche → droite, y compris dans l\u2019interface arabe.',
+    sBtn:'4 · Boutons', bNew:'Nouveau devis', bGen:'Transformer en commande', bExport:'Exporter la facture PDF',
+    bSee:'Voir la fiche client', bDel:'Annuler', bDisabled:'Validation requise',
+    sForm:'5 · Formulaires', fSup:'Fiche fournisseur', fName:'Raison sociale ', fWilaya:'Wilaya',
+    fRC:'Registre de commerce ', fRCerr:'Format invalide. Exemple attendu : 16/00-1234567B26.',
+    fPay:'Conditions de paiement', fProd:'Ligne de commande', fItem:'Produit', fQty:'Quantité',
+    fPrice:'Prix unitaire HT', fVat:'TVA', fSwitch1:'Mettre à jour le stock à la réception',
+    fSwitch2:'Notifier le fournisseur par e-mail',
+    sDash:'6 · Tableau de bord — KPI, graphiques & score',
+    k1:"Chiffre d'affaires du mois", k2:'Créances clients', k2d:'dont 41 % à +90 jours',
+    k3:'Factures impayées', k3d:'9 en retard critique', k4:'Valeur du stock', k4d:'6 produits en rupture',
+    chartTitle:'Achats vs Ventes — 6 mois',
+    chartNote:"Rendu final avec Recharts. Grille discrète, une seule couleur d'accent, infobulle au survol.",
+    scoreTitle:'Score fournisseur — SARL Bureautique Alger', scoreLvl:'Bon',
+    d1:'Prix', d2:'Délai', d3:'Qualité', d4:'Disponibilité', d5:'Garanties',
+    sTable:'7 · Tableaux de données', tabAll:'Toutes (312)', tabWait:'En attente (48)', tabLate:'En retard (27)',
+    thDoc:'Document', thClient:'Client', thAmount:'Montant TTC', thDue:'Échéance', thStatus:'Statut',
+    r1s:'Bon de livraison BL-0392', r1c:'Direction des Impôts — Alger', stWait2:'En attente',
+    r2s:'Commande CL-0355', r2c:'SPA Sonelgaz Distribution', stLate2:'En retard',
+    r3s:'Marché MP-2026-14', r3c:'EPH Zéralda', stPaid:'Payée',
+    r4s:'Devis non converti', r4c:'SARL Medina Informatique', stDraft2:'Brouillon',
+    cmpTitle:'Tableau comparatif des offres fournisseurs — Imprimante HP LaserJet M404',
+    thSup:'Fournisseur', thUnit:'Prix unitaire HT', thDelay:'Délai', thWar:'Garantie', thCond:'Conditions',
+    c1:'Comptant', c2:'30 jours', c3:'60 jours',
+    sFlow:'8 · Workflows commerciaux', flowBuy:'Achats', flowSell:'Ventes',
+    wb1:'Demande', wb2:'Consultation', wb3:'Offre', wb4:'Commande', wb5:'Réception', wb6:'Facture', wb7:'Paiement',
+    ws1:'Prospect', ws2:'Devis', ws3:'Commande', ws4:'Préparation', ws5:'Livraison', ws6:'Facture', ws7:'Paiement',
+    sAlert:"9 · Centre d'alertes",
+    alErr:'Facture impayée', alErrTxt:'FA-2026-0402 — SPA Sonelgaz : 3 890 000 DA en retard de 25 jours.',
+    alWarn:'Stock faible', alWarnTxt:'6 produits sous le seuil minimum, dont 2 en rupture totale.',
+    alInfo:"Garantie proche de l'expiration", alInfoTxt:'14 équipements livrés en 2024 arrivent en fin de garantie dans 30 jours.',
+    alOk:'Réception validée', alOkTxt:'BR-2026-0188 : 12 imprimantes reçues, stock mis à jour automatiquement.',
+    sNav:'10 · Navigation', nSec1:'Pilotage', nSec2:'Achats', nSec3:'Ventes', nSec4:'Ressources',
+    n1:'Tableau de bord', n2:'Statistiques', n3:'Fournisseurs', n4:'Commandes & réceptions',
+    n5:'Clients', n6:'Devis & factures', n7:'Produits & stock', n8:'Profil',
+    navNotes:'Règles de navigation',
+    nn1:'Fond encre identique en mode clair et sombre : repère stable.',
+    nn2:'Un seul élément actif à la fois, en bleu primaire plein.',
+    nn3:'En arabe, la barre latérale bascule à droite : propriétés logiques uniquement.',
+    nn4:'Trois sections métier : Achats, Ventes, Ressources — jamais plus de huit entrées visibles.',
+    sProfile:'11 · Page profil — dirigeant & entreprise',
+    sProfileNote:"Écran de référence de la section 39 du cahier des charges : informations personnelles du propriétaire, identité légale de l'entreprise, paramètres commerciaux, identité documentaire et sécurité.",
+    pRole:'Propriétaire · Gérant',
+    pMeta:'SARL Bureautique Alger · Compte actif · Dernière connexion : 24/08/2026 à 09:14',
+    pEdit:'Modifier',
+    ptab1:'Profil personnel', ptab2:'Entreprise', ptab3:'Paramètres commerciaux', ptab4:'Sécurité', ptab5:"Journal d'activité",
+    pPersonal:'Informations personnelles',
+    kName:'Nom & prénom', kNameAr:'الاسم واللقب', kBirth:'Date de naissance', kPlace:'Lieu de naissance',
+    kNin:'NIN', kQual:'Qualité', vQual:'Propriétaire · Gérant', kSince:'Prise de fonction',
+    kShare:'Part du capital', kPhone:'Mobile', kMail:'Email personnel',
+    privTitle:'Données strictement privées',
+    privTxt:"Visibles uniquement par le dirigeant et l'administrateur. Jamais reproduites sur un document commercial. Tout accès est journalisé (loi 18-07).",
+    pCompany:"Identité de l'entreprise", kComp:'Raison sociale', kCompAr:'التسمية', kForm:'Forme juridique',
+    kCap:'Capital social', kWil:'Wilaya',
+    pDefaults:'Paramètres par défaut', kVat:'TVA', kCur:'Devise', kTerm:'Règlement', vTerm:'30 jours',
+    kNum:'Numérotation', kDocLang:'Langue des documents', vDocLang:'Bilingue AR / FR', kCredit:'Plafond de crédit',
+    pIdent:'Identité documentaire', stLogo:'Logo', stLogoTxt:'Affiché en en-tête de tous les PDF',
+    pStamp:'Cachet', stStamp:'Cachet numérisé', stStampTxt:'Apposé sur factures, BL et reçus',
+    pSign:'Signature', stSign:'Signature du gérant', stSignTxt:'Insérée automatiquement, version AR et FR',
+    pSec:'Sécurité du compte', sec1:'Authentification à deux facteurs (2FA)',
+    sec2:'Alerte en cas de connexion inhabituelle', sec3:'Changer le mot de passe', sec4:'Fermer les autres sessions',
+    pLog:"Journal d'activité", thAct:'Action', thWhen:'Date', thIp:'Appareil',
+    lg1:'Validation facture FA-2026-0417', lg2:'Modification du taux de TVA par défaut',
+    lg3:"Création de l'utilisateur « Commercial 02 »",
+    foot:'CHAMIL — شـامل · Design System v1.0 · fondations héritées de MRAFIQ · IBM Plex · FR / AR · clair & sombre · WCAG AA',
+  },
+  ar: {
+    theme: () => document.documentElement.getAttribute('data-theme')==='dark' ? 'الوضع الفاتح' : 'الوضع الداكن',
+    heroTitle:'نظام التصميم — شـامل',
+    heroSub:'الأسس البصرية للوحدة المركزية للمشتريات والمبيعات: الموردون، المشتريات، المخزون، الزبائن، المبيعات، الوثائق والمدفوعات. ثنائي اللغة، دعم أصلي للكتابة من اليمين إلى اليسار، وضعان فاتح وداكن.',
+    sBrand:'1 · الهوية البصرية', sBrandNote:'نفس أسس « مرافق »: الكلمة العربية هي العنصر المهيمن، واللون النحاسي مخصص للهوية فقط ولا يُستعمل في المكونات الوظيفية.',
+    slogan:'نظام متكامل لتسيير المشتريات والمبيعات والمخزون والعمليات التجارية',
+    sPalette:'2 · الألوان', sPaletteNote:'الألوان موروثة من « مرافق » دون تغيير. ما يتغيّر هو دلالة الحالات: تصبح تجارية.',
+    pBrand:'الهوية والإجراءات', pStatus:'حالات العمليات', pSev:'الاستعجال والأولوية',
+    pSevNote:'مستطيل مصمت للاستعجال، وشارة دائرية للحالة: لا يختلط الاثنان أبدًا.',
+    stOk:'مصادق · مدفوع · مُسلَّم', stWait:'قيد الانتظار · جزئي', stLate:'غير مدفوع · متأخر · نفاد',
+    stDraft:'مسودة · ملغى', stProc:'بانتظار المصادقة · قيد المعالجة',
+    svCrit:'حرِج', svHigh:'مرتفع', svMed:'متوسط', svLow:'منخفض',
+    sType:'3 · الخطوط', tPage:'فواتير الزبائن', tCard:'بطاقة مورّد — ش.ذ.م.م للتجهيزات المكتبية',
+    tBody:'كل عملية مرتبطة بمصدرها: من المورّد إلى الدفع، تبقى السلسلة قابلة للتتبع.',
+    tSmall:'آخر تعديل من طرف ك. بن علي بتاريخ 12/08/2026 على الساعة 14:32.',
+    typoNote:'قاعدة صارمة: المبالغ والكميات والتواريخ والمراجع تُكتب دائمًا بخط IBM Plex Mono ومن اليسار إلى اليمين، حتى في الواجهة العربية.',
+    sBtn:'4 · الأزرار', bNew:'عرض سعر جديد', bGen:'تحويل إلى طلبية', bExport:'تصدير الفاتورة PDF',
+    bSee:'عرض بطاقة الزبون', bDel:'إلغاء', bDisabled:'المصادقة مطلوبة',
+    sForm:'5 · الاستمارات', fSup:'بطاقة المورّد', fName:'التسمية الاجتماعية ', fWilaya:'الولاية',
+    fRC:'السجل التجاري ', fRCerr:'صيغة غير صحيحة. المثال المطلوب: 16/00-1234567B26.',
+    fPay:'شروط الدفع', fProd:'سطر الطلبية', fItem:'المنتج', fQty:'الكمية',
+    fPrice:'سعر الوحدة خارج الرسم', fVat:'الرسم على القيمة المضافة',
+    fSwitch1:'تحديث المخزون عند الاستلام', fSwitch2:'إشعار المورّد عبر البريد الإلكتروني',
+    sDash:'6 · لوحة القيادة — المؤشرات والرسوم والتنقيط',
+    k1:'رقم أعمال الشهر', k2:'ديون الزبائن', k2d:'منها 41 % تتجاوز 90 يومًا',
+    k3:'فواتير غير مدفوعة', k3d:'9 في تأخر حرِج', k4:'قيمة المخزون', k4d:'6 منتجات في حالة نفاد',
+    chartTitle:'المشتريات مقابل المبيعات — 6 أشهر',
+    chartNote:'العرض النهائي عبر Recharts. شبكة خفيفة، لون تمييز واحد، تلميح عند التمرير.',
+    scoreTitle:'تنقيط المورّد — ش.ذ.م.م للتجهيزات المكتبية', scoreLvl:'جيد',
+    d1:'السعر', d2:'الآجال', d3:'الجودة', d4:'التوفر', d5:'الضمانات',
+    sTable:'7 · جداول المعطيات', tabAll:'الكل (312)', tabWait:'قيد الانتظار (48)', tabLate:'متأخرة (27)',
+    thDoc:'الوثيقة', thClient:'الزبون', thAmount:'المبلغ مع الرسم', thDue:'أجل الاستحقاق', thStatus:'الحالة',
+    r1s:'وصل التسليم BL-0392', r1c:'مديرية الضرائب — الجزائر', stWait2:'قيد الانتظار',
+    r2s:'الطلبية CL-0355', r2c:'سونلغاز للتوزيع', stLate2:'متأخرة',
+    r3s:'الصفقة MP-2026-14', r3c:'المؤسسة الاستشفائية زرالدة', stPaid:'مدفوعة',
+    r4s:'عرض سعر غير محوَّل', r4c:'ش.ذ.م.م مدينة للإعلام الآلي', stDraft2:'مسودة',
+    cmpTitle:'جدول مقارنة عروض الموردين — طابعة HP LaserJet M404',
+    thSup:'المورّد', thUnit:'سعر الوحدة خارج الرسم', thDelay:'الأجل', thWar:'الضمان', thCond:'الشروط',
+    c1:'نقدًا', c2:'30 يومًا', c3:'60 يومًا',
+    sFlow:'8 · المسارات التجارية', flowBuy:'المشتريات', flowSell:'المبيعات',
+    wb1:'الطلب', wb2:'الاستشارة', wb3:'العرض', wb4:'الطلبية', wb5:'الاستلام', wb6:'الفاتورة', wb7:'الدفع',
+    ws1:'زبون محتمل', ws2:'عرض سعر', ws3:'طلبية', ws4:'التحضير', ws5:'التسليم', ws6:'الفاتورة', ws7:'الدفع',
+    sAlert:'9 · مركز التنبيهات',
+    alErr:'فاتورة غير مدفوعة', alErrTxt:'FA-2026-0402 — سونلغاز: 3 890 000 دج متأخرة بـ 25 يومًا.',
+    alWarn:'مخزون منخفض', alWarnTxt:'6 منتجات تحت الحد الأدنى، منها 2 في نفاد تام.',
+    alInfo:'ضمان قارب على الانتهاء', alInfoTxt:'14 تجهيزًا سُلِّمت سنة 2024 ينتهي ضمانها خلال 30 يومًا.',
+    alOk:'استلام مصادق عليه', alOkTxt:'BR-2026-0188: استلام 12 طابعة، وتحديث المخزون تلقائيًا.',
+    sNav:'10 · التنقل', nSec1:'القيادة', nSec2:'المشتريات', nSec3:'المبيعات', nSec4:'الموارد',
+    n1:'لوحة القيادة', n2:'الإحصائيات', n3:'الموردون', n4:'الطلبيات والاستلامات',
+    n5:'الزبائن', n6:'عروض الأسعار والفواتير', n7:'المنتجات والمخزون', n8:'الملف الشخصي',
+    navNotes:'قواعد التنقل',
+    nn1:'خلفية حبرية موحّدة في الوضعين الفاتح والداكن: معلم بصري ثابت.',
+    nn2:'عنصر نشط واحد فقط في كل مرة، بالأزرق الأساسي المصمت.',
+    nn3:'في العربية ينتقل الشريط الجانبي إلى اليمين تلقائيًا: خصائص منطقية فقط.',
+    nn4:'ثلاثة أقسام: المشتريات، المبيعات، الموارد — دون تجاوز ثمانية عناصر ظاهرة.',
+    sProfile:'11 · صفحة الملف الشخصي — المسيّر والمؤسسة',
+    sProfileNote:'الشاشة المرجعية للقسم 39 من دفتر الشروط: المعلومات الشخصية للمالك، الهوية القانونية للمؤسسة، الإعدادات التجارية، الهوية الوثائقية والأمن.',
+    pRole:'المالك · المسيّر',
+    pMeta:'ش.ذ.م.م للتجهيزات المكتبية · حساب نشط · آخر اتصال: 24/08/2026 على الساعة 09:14',
+    pEdit:'تعديل',
+    ptab1:'الملف الشخصي', ptab2:'المؤسسة', ptab3:'الإعدادات التجارية', ptab4:'الأمن', ptab5:'سجل النشاط',
+    pPersonal:'المعلومات الشخصية',
+    kName:'الاسم واللقب', kNameAr:'الاسم بالعربية', kBirth:'تاريخ الميلاد', kPlace:'مكان الميلاد',
+    kNin:'رقم التعريف الوطني', kQual:'الصفة', vQual:'المالك · المسيّر', kSince:'تاريخ استلام المهام',
+    kShare:'الحصة في رأس المال', kPhone:'الهاتف النقال', kMail:'البريد الشخصي',
+    privTitle:'معطيات خاصة بصفة صارمة',
+    privTxt:'لا يطّلع عليها إلا المسيّر والمسؤول الإداري. لا تظهر أبدًا في وثيقة تجارية. كل اطّلاع يُسجَّل (القانون 18-07).',
+    pCompany:'هوية المؤسسة', kComp:'التسمية الاجتماعية', kCompAr:'التسمية بالعربية', kForm:'الشكل القانوني',
+    kCap:'رأس المال', kWil:'الولاية',
+    pDefaults:'الإعدادات الافتراضية', kVat:'الرسم على القيمة المضافة', kCur:'العملة', kTerm:'أجل الدفع', vTerm:'30 يومًا',
+    kNum:'الترقيم', kDocLang:'لغة الوثائق', vDocLang:'ثنائي عربي / فرنسي', kCredit:'سقف الائتمان',
+    pIdent:'الهوية الوثائقية', stLogo:'الشعار', stLogoTxt:'يظهر في ترويسة كل ملفات PDF',
+    pStamp:'الخـتم', stStamp:'ختم رقمي', stStampTxt:'يوضع على الفواتير ووصولات التسليم والإيصالات',
+    pSign:'الإمضاء', stSign:'إمضاء المسيّر', stSignTxt:'يُدرج تلقائيًا، نسخة عربية وفرنسية',
+    pSec:'أمن الحساب', sec1:'المصادقة الثنائية (2FA)',
+    sec2:'تنبيه عند اتصال غير معتاد', sec3:'تغيير كلمة المرور', sec4:'إغلاق الجلسات الأخرى',
+    pLog:'سجل النشاط', thAct:'العملية', thWhen:'التاريخ', thIp:'الجهاز',
+    lg1:'المصادقة على الفاتورة FA-2026-0417', lg2:'تعديل نسبة الرسم الافتراضية',
+    lg3:'إنشاء المستخدم « تجاري 02 »',
+    foot:'شـامل — CHAMIL · نظام التصميم 1.0 · أسس موروثة من مرافق · IBM Plex · عربي / فرنسي · فاتح وداكن · WCAG AA',
+  }
+};
+
+let currentLang = 'fr';
+function applyLang(lang){
+  currentLang = lang;
+  const dict = I18N[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v = dict[el.dataset.i18n];
+    if(v !== undefined) el.textContent = typeof v === 'function' ? v() : v;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const v = dict[el.dataset.i18nPh];
+    if(v !== undefined) el.placeholder = v;
+  });
+}
+const btnLang = document.getElementById('btnLang');
+btnLang.addEventListener('click', ()=>{
+  const next = currentLang === 'fr' ? 'ar' : 'fr';
+  btnLang.setAttribute('aria-pressed', String(next==='ar'));
+  applyLang(next);
+});
+
+/* ---------- Onglets ---------- */
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    tab.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected','false'));
+    tab.setAttribute('aria-selected','true');
+  });
+});
+
+/* ---------- Animation de la jauge ---------- */
+const arc = document.getElementById('gaugeArc');
+if (arc && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  const target = arc.getAttribute('stroke-dashoffset');
+  arc.setAttribute('stroke-dashoffset','452.4');
+  requestAnimationFrame(()=>{ arc.style.transition='stroke-dashoffset 1s cubic-bezier(.22,.8,.36,1)'; arc.setAttribute('stroke-dashoffset', target); });
+}
+applyLang('fr');
+</script>
+</body>
+</html>

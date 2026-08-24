@@ -1,0 +1,108 @@
+{% load i18n %}<!DOCTYPE html>
+<html lang="{% if language == 'ar' %}ar{% else %}fr{% endif %}"
+      dir="{% if language == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+<meta charset="utf-8">
+<title>{{ document.number }}</title>
+<style>
+  /* Reprend les jetons du design system CHAMIL (aligné MRAFIQ) */
+  @page { size: A4; margin: 18mm 16mm; }
+  body { font-family: "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif;
+         font-size: 10.5pt; color: #14212F; line-height: 1.55; }
+  .data { font-family: "IBM Plex Mono", monospace; direction: ltr; unicode-bidi: isolate; }
+  header { display: flex; justify-content: space-between; align-items: flex-start;
+           border-bottom: 2px solid #0B2545; padding-bottom: 12px; }
+  .brand { font-size: 16pt; font-weight: 700; color: #0B2545; }
+  .brand small { display: block; font-size: 8pt; letter-spacing: .18em;
+                 color: #B08A3C; font-weight: 600; }
+  .doc-title { text-align: end; }
+  .doc-title h1 { font-size: 15pt; margin: 0; color: #1B5CB4; }
+  .parties { display: flex; justify-content: space-between; gap: 24px; margin: 20px 0; }
+  .party { flex: 1; }
+  .party b { display: block; font-size: 8.5pt; text-transform: uppercase;
+             letter-spacing: .08em; color: #8393A9; margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 9.5pt; }
+  thead th { background: #EDF1F7; color: #51617A; text-align: start; padding: 7px 9px;
+             font-size: 8pt; text-transform: uppercase; letter-spacing: .06em;
+             border-bottom: 1px solid #C6D1E0; }
+  tbody td { padding: 7px 9px; border-bottom: 1px solid #E1E7F0; }
+  td.num, th.num { text-align: end; font-family: "IBM Plex Mono", monospace;
+                   direction: ltr; unicode-bidi: isolate; }
+  .totals { margin-inline-start: auto; width: 46%; margin-top: 14px; }
+  .totals td { padding: 5px 9px; }
+  .totals tr:last-child td { font-weight: 700; font-size: 11.5pt; color: #0B2545;
+                             border-top: 2px solid #0B2545; }
+  .signature-zone { display: flex; justify-content: space-between; margin-top: 40px; }
+  .sig { text-align: center; font-size: 8.5pt; color: #51617A; }
+  .sig img { max-height: 60px; display: block; margin: 0 auto 4px; }
+  footer { position: fixed; bottom: 0; inset-inline: 0; font-size: 7.5pt;
+           color: #8393A9; text-align: center; border-top: 1px solid #E1E7F0;
+           padding-top: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    {% if company.logo %}<img src="{{ company.logo.url }}" style="max-height:52px">{% endif %}
+    <div class="brand">{{ company.name }}<small>CHAMIL — شـامل</small></div>
+    <div class="data" style="font-size:8pt; color:#51617A">
+      RC {{ company.rc }} · NIF {{ company.nif }} · NIS {{ company.nis }}
+    </div>
+  </div>
+  <div class="doc-title">
+    <h1>{% block doc_title %}Document{% endblock %}</h1>
+    <div class="data">{{ document.number }}</div>
+    <div class="data">{{ document.date|date:"Y-m-d" }}</div>
+  </div>
+</header>
+
+{% block parties %}{% endblock %}
+
+<table>
+  <thead>
+    <tr>
+      <th>Désignation</th>
+      <th class="num">Qté</th>
+      <th class="num">P.U. HT</th>
+      <th class="num">Remise</th>
+      <th class="num">TVA</th>
+      <th class="num">Total HT</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for line in lines %}
+    <tr>
+      <td>{{ line.description }}</td>
+      <td class="num">{{ line.quantity }}</td>
+      <td class="num">{{ line.unit_price }}</td>
+      <td class="num">{{ line.discount }} %</td>
+      <td class="num">{{ line.vat_rate }} %</td>
+      <td class="num">{{ line.amount_ht }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<table class="totals">
+  <tr><td>Total HT</td><td class="num">{{ document.amount_ht }} {{ settings.currency }}</td></tr>
+  <tr><td>TVA</td><td class="num">{{ document.amount_vat }} {{ settings.currency }}</td></tr>
+  <tr><td>Total TTC</td><td class="num">{{ document.amount_ttc }} {{ settings.currency }}</td></tr>
+</table>
+
+<div class="signature-zone">
+  <div class="sig">
+    {% if company.stamp %}<img src="{{ company.stamp.url }}" alt="">{% endif %}
+    Cachet de l'entreprise
+  </div>
+  <div class="sig">
+    {% if owner.signature %}<img src="{{ owner.signature.url }}" alt="">{% endif %}
+    {{ owner.full_name }}<br>{{ owner.get_position_display }}
+  </div>
+</div>
+
+<footer>
+  {{ settings.legal_mentions }}
+  {% if settings.invoice_footer %} — {{ settings.invoice_footer }}{% endif %}
+</footer>
+</body>
+</html>

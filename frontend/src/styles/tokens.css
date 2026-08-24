@@ -1,0 +1,60 @@
+/* Jetons du design system CHAMIL — identiques à MRAFIQ, sémantique commerciale */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root, [data-theme='light'] {
+  --bg-app: #F5F7FB; --bg-surface: #FFFFFF; --bg-sunken: #EDF1F7; --bg-sidebar: #0B2545;
+  --border: #E1E7F0; --border-strong: #C6D1E0;
+  --text-primary: #14212F; --text-secondary: #51617A; --text-muted: #8393A9;
+  --status-ok: #178A50;   --status-ok-bg: #E4F5EC;
+  --status-wait: #B45D0C; --status-wait-bg: #FBEEDD;
+  --status-late: #C22D2D; --status-late-bg: #FBE7E7;
+  --status-draft: #5C6B82;--status-draft-bg: #ECF0F5;
+  --status-proc: #6D3FC0; --status-proc-bg: #F0EAFB;
+  --shadow-card: 0 1px 2px rgba(8,28,51,.05), 0 4px 16px rgba(8,28,51,.06);
+  --shadow-pop: 0 8px 30px rgba(8,28,51,.16);
+}
+
+[data-theme='dark'] {
+  --bg-app: #0A111E; --bg-surface: #101A2B; --bg-sunken: #0D1524; --bg-sidebar: #081C33;
+  --border: #1E2B41; --border-strong: #2B3B57;
+  --text-primary: #E8EEF7; --text-secondary: #A5B3C9; --text-muted: #6E7F99;
+  --status-ok: #4CC38A;   --status-ok-bg: #12301F;
+  --status-wait: #E8A253; --status-wait-bg: #33230F;
+  --status-late: #F07575; --status-late-bg: #3A1414;
+  --status-draft: #9AA8BD;--status-draft-bg: #1B2536;
+  --status-proc: #A98BE8; --status-proc-bg: #251A3D;
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+  --shadow-pop: 0 10px 34px rgba(0,0,0,.5);
+}
+
+@layer base {
+  body {
+    @apply bg-app text-content font-sans antialiased;
+    transition: background .22s cubic-bezier(.22,.8,.36,1), color .22s cubic-bezier(.22,.8,.36,1);
+  }
+  html[dir='rtl'] body { @apply font-arabic; line-height: 1.8; }
+  :focus-visible { outline: 2px solid #2E74D6; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+}
+
+@layer components {
+  /* Montants, codes et dates : toujours en mono et en direction LTR, même en arabe */
+  .data { @apply font-mono; direction: ltr; unicode-bidi: isolate; }
+  .card { @apply bg-surface border border-line rounded-lg shadow-card p-5; }
+  .input {
+    @apply w-full bg-surface border border-line-strong rounded-md px-3 py-2 text-sm
+           text-content transition-colors;
+  }
+  .input:focus { @apply border-primary-600 outline-none ring-2 ring-primary-500/30; }
+  .label { @apply block text-[0.8125rem] font-semibold mb-1.5; }
+  .th {
+    @apply bg-sunken text-muted font-semibold text-start px-4 py-2.5 text-[0.72rem]
+           uppercase tracking-wider border-b border-line;
+  }
+  .td { @apply px-4 py-3 border-b border-line align-middle; }
+  .td-num { @apply px-4 py-3 border-b border-line text-end font-mono; direction: ltr; unicode-bidi: isolate; }
+}

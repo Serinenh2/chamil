@@ -1,0 +1,62 @@
+{
+  "app": { "name": "CHAMIL", "tagline": "Système intégré de gestion commerciale" },
+  "nav": {
+    "pilotage": "Pilotage", "dashboard": "Tableau de bord", "stats": "Statistiques",
+    "purchasing": "Achats", "suppliers": "Fournisseurs", "purchaseOrders": "Commandes fournisseurs",
+    "receipts": "Réceptions", "requests": "Demandes d'achat",
+    "sales": "Ventes", "customers": "Clients", "quotes": "Devis", "orders": "Commandes clients",
+    "deliveries": "Livraisons", "invoices": "Factures", "payments": "Règlements",
+    "resources": "Ressources", "products": "Produits", "stock": "Stock", "serials": "Numéros de série",
+    "alerts": "Alertes", "profile": "Profil", "users": "Utilisateurs", "logout": "Déconnexion"
+  },
+  "common": {
+    "search": "Rechercher", "new": "Nouveau", "edit": "Modifier", "save": "Enregistrer",
+    "cancel": "Annuler", "delete": "Supprimer", "close": "Fermer", "loading": "Chargement…",
+    "empty": "Aucun élément à afficher", "error": "Une erreur est survenue",
+    "retry": "Réessayer", "actions": "Actions", "total": "Total", "all": "Tous",
+    "darkMode": "Mode sombre", "lightMode": "Mode clair", "of": "sur", "page": "Page",
+    "export": "Exporter PDF", "send": "Envoyer", "validate": "Valider", "back": "Retour"
+  },
+  "status": {
+    "draft": "Brouillon", "pending": "En attente", "validated": "Validé", "partial": "Partiel",
+    "completed": "Terminé", "cancelled": "Annulé", "refused": "Refusé",
+    "paid": "Payée", "overdue": "En retard"
+  },
+  "urgency": { "critical": "Critique", "high": "Élevée", "medium": "Moyenne", "low": "Faible" },
+  "auth": {
+    "title": "Connexion", "subtitle": "Accédez à votre espace de gestion",
+    "username": "Identifiant", "password": "Mot de passe", "submit": "Se connecter",
+    "error": "Identifiant ou mot de passe incorrect."
+  },
+  "dashboard": {
+    "title": "Tableau de bord", "revenueMonth": "Chiffre d'affaires du mois",
+    "receivables": "Créances clients", "unpaid": "Factures impayées", "stockValue": "Valeur du stock",
+    "supplierDebt": "Dettes fournisseurs", "trend": "Achats vs Ventes", "topCustomers": "Meilleurs clients",
+    "topProducts": "Produits les plus vendus", "openAlerts": "Alertes ouvertes",
+    "purchases": "Achats", "salesLabel": "Ventes"
+  },
+  "table": {
+    "number": "Numéro", "date": "Date", "customer": "Client", "supplier": "Fournisseur",
+    "amount": "Montant TTC", "balance": "Solde", "due": "Échéance", "status": "Statut",
+    "code": "Code", "name": "Désignation", "quantity": "Quantité", "price": "Prix",
+    "stock": "Stock", "score": "Score", "phone": "Téléphone", "wilaya": "Wilaya"
+  },
+  "profile": {
+    "title": "Profil", "personal": "Profil personnel", "company": "Entreprise",
+    "settings": "Paramètres commerciaux", "security": "Sécurité", "log": "Journal d'activité",
+    "identity": "Informations personnelles", "privateTitle": "Données strictement privées",
+    "privateText": "Visibles uniquement par le dirigeant et l'administrateur. Jamais reproduites sur un document commercial. Tout accès est journalisé (loi 18-07).",
+    "lastName": "Nom", "firstName": "Prénom", "lastNameAr": "اللقب", "firstNameAr": "الاسم",
+    "birthDate": "Date de naissance", "birthPlace": "Lieu de naissance", "nin": "NIN",
+    "position": "Qualité", "appointedOn": "Prise de fonction", "capitalShare": "Part du capital",
+    "mobile": "Mobile", "personalEmail": "E-mail personnel", "address": "Adresse",
+    "companyName": "Raison sociale", "legalForm": "Forme juridique", "capital": "Capital social",
+    "vat": "TVA par défaut", "currency": "Devise", "paymentTerm": "Conditions de paiement",
+    "numbering": "Numérotation", "docLang": "Langue des documents", "creditLimit": "Plafond de crédit",
+    "changePassword": "Changer le mot de passe", "twoFactor": "Authentification à deux facteurs (2FA)",
+    "loginAlert": "Alerte en cas de connexion inhabituelle", "closeSessions": "Fermer les autres sessions",
+    "logins": "Historique des connexions", "device": "Appareil", "preferences": "Préférences"
+  },
+  "alerts": { "title": "Centre d'alertes", "markAllRead": "Tout marquer comme lu",
+              "resolve": "Traiter", "none": "Aucune alerte en cours" }
+}
