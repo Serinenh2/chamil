@@ -85,5 +85,10 @@
     "lines": "Lignes de commande", "addLine": "Ajouter une ligne",
     "confirmDelete": "Supprimer cette commande ?",
     "deleteError": "Impossible de supprimer : cette commande est référencée par des documents existants."
+  },
+  "quotes": {
+    "new": "Nouveau devis", "edit": "Modifier le devis", "validUntil": "Validité",
+    "confirmDelete": "Supprimer ce devis ?",
+    "deleteError": "Impossible de supprimer : ce devis est référencé par des documents existants."
   }
 }
