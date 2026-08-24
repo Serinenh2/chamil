@@ -19,11 +19,18 @@ class CompanyViewSet(BaseModelViewSet):
     read_roles = None  # lecture ouverte à tous les utilisateurs connectés
     write_roles = ("owner", "admin")
 
-    @action(detail=False, methods=["get"])
+    @action(detail=False, methods=["get", "patch"])
     def current(self, request):
         company = Company.current()
         if not company:
             return Response({"detail": "Aucune entreprise enregistrée."}, status=404)
+        if request.method == "PATCH":
+            if request.user.role not in ("owner", "admin"):
+                return Response({"detail": "Action réservée au dirigeant."}, status=403)
+            s = self.get_serializer(company, data=request.data, partial=True)
+            s.is_valid(raise_exception=True)
+            s.save(updated_by=request.user)
+            return Response(s.data)
         return Response(self.get_serializer(company).data)
 
 
@@ -51,6 +58,10 @@ class OwnerProfileViewSet(BaseModelViewSet):
             s = self.get_serializer(profile, data=request.data, partial=True)
             s.is_valid(raise_exception=True)
             s.save(updated_by=request.user)
+            if request.user.first_name != profile.first_name or request.user.last_name != profile.last_name:
+                request.user.first_name = profile.first_name
+                request.user.last_name = profile.last_name
+                request.user.save(update_fields=["first_name", "last_name"])
             return Response(s.data)
         return Response(self.get_serializer(profile).data)
 

@@ -39,7 +39,7 @@
     "number": "Numéro", "date": "Date", "customer": "Client", "supplier": "Fournisseur",
     "amount": "Montant TTC", "balance": "Solde", "due": "Échéance", "status": "Statut",
     "code": "Code", "name": "Désignation", "quantity": "Quantité", "price": "Prix",
-    "stock": "Stock", "score": "Score", "phone": "Téléphone", "wilaya": "Wilaya"
+    "stock": "Stock", "score": "Score", "phone": "Téléphone", "wilaya": "Wilaya", "commune": "Commune"
   },
   "profile": {
     "title": "Profil", "personal": "Profil personnel", "company": "Entreprise",
@@ -51,6 +51,7 @@
     "position": "Qualité", "appointedOn": "Prise de fonction", "capitalShare": "Part du capital",
     "mobile": "Mobile", "personalEmail": "E-mail personnel", "address": "Adresse",
     "companyName": "Raison sociale", "legalForm": "Forme juridique", "capital": "Capital social",
+    "headOffice": "Siège social",
     "vat": "TVA par défaut", "currency": "Devise", "paymentTerm": "Conditions de paiement",
     "numbering": "Numérotation", "docLang": "Langue des documents", "creditLimit": "Plafond de crédit",
     "changePassword": "Changer le mot de passe", "twoFactor": "Authentification à deux facteurs (2FA)",

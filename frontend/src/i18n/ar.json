@@ -39,7 +39,7 @@
     "number": "الرقم", "date": "التاريخ", "customer": "الزبون", "supplier": "المورّد",
     "amount": "المبلغ مع الرسم", "balance": "الرصيد", "due": "الاستحقاق", "status": "الحالة",
     "code": "الرمز", "name": "التسمية", "quantity": "الكمية", "price": "السعر",
-    "stock": "المخزون", "score": "التنقيط", "phone": "الهاتف", "wilaya": "الولاية"
+    "stock": "المخزون", "score": "التنقيط", "phone": "الهاتف", "wilaya": "الولاية", "commune": "البلدية"
   },
   "profile": {
     "title": "الملف الشخصي", "personal": "الملف الشخصي", "company": "المؤسسة",
@@ -51,6 +51,7 @@
     "position": "الصفة", "appointedOn": "تاريخ استلام المهام", "capitalShare": "الحصة في رأس المال",
     "mobile": "الهاتف النقال", "personalEmail": "البريد الشخصي", "address": "العنوان",
     "companyName": "التسمية الاجتماعية", "legalForm": "الشكل القانوني", "capital": "رأس المال",
+    "headOffice": "المقر الاجتماعي",
     "vat": "الرسم الافتراضي", "currency": "العملة", "paymentTerm": "شروط الدفع",
     "numbering": "الترقيم", "docLang": "لغة الوثائق", "creditLimit": "سقف الائتمان",
     "changePassword": "تغيير كلمة المرور", "twoFactor": "المصادقة الثنائية (2FA)",

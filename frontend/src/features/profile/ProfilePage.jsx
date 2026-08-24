@@ -1,13 +1,24 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Lock } from 'lucide-react'
+import { rest } from '@/services/api'
 import { useEndpoint } from '@/hooks/useResource'
 import { useFormat } from '@/hooks/useFormat'
 import { useAuth } from '@/context/AuthContext'
-import { Alert, Card, KeyValue, Spinner, Tabs } from '@/components/ui'
+import { Alert, Button, Card, Field, Input, KeyValue, Select, Spinner, Tabs } from '@/components/ui'
 import CompanyTab from './CompanyTab'
 import SecurityTab from './SecurityTab'
 import ActivityLogTab from './ActivityLogTab'
+
+const POSITIONS = [
+  ['owner', 'Propriétaire'], ['manager', 'Gérant'], ['ceo', 'PDG'],
+  ['partner', 'Associé'], ['dg', 'Directeur général'],
+]
+
+function errorText(error, fallback) {
+  return Object.values(error?.response?.data || {}).flat().join(' ') || fallback
+}
 
 /**
  * Page profil — section 39 du cahier des charges.
@@ -16,12 +27,41 @@ import ActivityLogTab from './ActivityLogTab'
  */
 export default function ProfilePage() {
   const { t } = useTranslation()
-  const { user, isOwner } = useAuth()
+  const { user, setUser, isOwner } = useAuth()
   const { date, number } = useFormat()
+  const qc = useQueryClient()
   const [tab, setTab] = useState('personal')
+  const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState(null)
 
   const { data: profile, isLoading, error } = useEndpoint('/profile/owner/me/', {},
                                                           { retry: false, enabled: isOwner })
+
+  const saveProfile = useMutation({
+    mutationFn: (payload) => rest.patch('/profile/owner/me/', payload),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ['/profile/owner/me/'] })
+      setUser({
+        ...user,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        full_name: `${data.first_name} ${data.last_name}`.trim(),
+      })
+      setEditing(false)
+    },
+  })
+
+  const startEdit = () => {
+    setForm({
+      last_name: profile.last_name || '', first_name: profile.first_name || '',
+      last_name_ar: profile.last_name_ar || '', first_name_ar: profile.first_name_ar || '',
+      birth_date: profile.birth_date || '', birth_place: profile.birth_place || '',
+      nin: profile.nin || '', position: profile.position || 'owner',
+      appointed_on: profile.appointed_on || '', capital_share: profile.capital_share ?? 0,
+      mobile: profile.mobile || '', personal_email: profile.personal_email || '',
+    })
+    setEditing(true)
+  }
 
   const initials = (user?.full_name || user?.username || '?')
     .split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()
@@ -65,14 +105,87 @@ export default function ProfilePage() {
 
       {tab === 'personal' && (
         <div className="grid gap-4 lg:grid-cols-2">
-          <Card title={t('profile.identity')}>
+          <Card title={t('profile.identity')}
+                action={isOwner && profile && !editing && (
+                  <Button size="sm" variant="secondary" onClick={startEdit}>{t('common.edit')}</Button>
+                )}>
             {isLoading && <div className="flex justify-center py-6"><Spinner /></div>}
             {error && (
               <Alert tone="warn" title={t('profile.privateTitle')}>
                 {t('profile.privateText')}
               </Alert>
             )}
-            {profile && (
+            {saveProfile.isError && (
+              <Alert tone="error">{errorText(saveProfile.error, t('common.error'))}</Alert>
+            )}
+
+            {profile && editing && (
+              <>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label={t('profile.lastName')} required>
+                    <Input value={form.last_name}
+                           onChange={(e) => setForm({ ...form, last_name: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.firstName')} required>
+                    <Input value={form.first_name}
+                           onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.lastNameAr')}>
+                    <Input dir="rtl" value={form.last_name_ar}
+                           onChange={(e) => setForm({ ...form, last_name_ar: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.firstNameAr')}>
+                    <Input dir="rtl" value={form.first_name_ar}
+                           onChange={(e) => setForm({ ...form, first_name_ar: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.birthDate')}>
+                    <Input type="date" value={form.birth_date || ''}
+                           onChange={(e) => setForm({ ...form, birth_date: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.birthPlace')}>
+                    <Input value={form.birth_place}
+                           onChange={(e) => setForm({ ...form, birth_place: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.nin')}>
+                    <Input value={form.nin}
+                           onChange={(e) => setForm({ ...form, nin: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.position')}>
+                    <Select value={form.position}
+                            onChange={(e) => setForm({ ...form, position: e.target.value })}>
+                      {POSITIONS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                    </Select>
+                  </Field>
+                  <Field label={t('profile.appointedOn')}>
+                    <Input type="date" value={form.appointed_on || ''}
+                           onChange={(e) => setForm({ ...form, appointed_on: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.capitalShare')}>
+                    <Input type="number" step="0.01" value={form.capital_share}
+                           onChange={(e) => setForm({ ...form, capital_share: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.mobile')}>
+                    <Input value={form.mobile}
+                           onChange={(e) => setForm({ ...form, mobile: e.target.value })} />
+                  </Field>
+                  <Field label={t('profile.personalEmail')}>
+                    <Input type="email" value={form.personal_email}
+                           onChange={(e) => setForm({ ...form, personal_email: e.target.value })} />
+                  </Field>
+                </div>
+                <div className="mt-2 flex gap-2">
+                  <Button size="sm" disabled={saveProfile.isPending}
+                          onClick={() => saveProfile.mutate(form)}>
+                    {t('common.save')}
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setEditing(false)}>
+                    {t('common.cancel')}
+                  </Button>
+                </div>
+              </>
+            )}
+
+            {profile && !editing && (
               <dl className="grid gap-4 sm:grid-cols-2">
                 <KeyValue label={t('profile.lastName')} value={profile.last_name} />
                 <KeyValue label={t('profile.firstName')} value={profile.first_name} />

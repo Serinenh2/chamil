@@ -89,6 +89,7 @@ export const rest = {
   remove: (resource, id) => api.delete(`/${resource}/${id}/`).then((r) => r.data),
   action: (path, payload) => api.post(path, payload).then((r) => r.data),
   fetch: (path, params) => api.get(path, { params }).then((r) => r.data),
+  patch: (path, payload) => api.patch(path, payload).then((r) => r.data),
 }
 
 export default api

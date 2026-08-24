@@ -94,7 +94,7 @@ python manage.py runserver
 API disponible sur `http://localhost:8000/api/v1/`,
 administration sur `http://localhost:8000/admin/`.
 
-Compte de démonstration : **karim / Chamil2026!** (rôle propriétaire).
+Compte de démonstration : **admin / Chamil2026!** (rôle propriétaire).
 Autres comptes : `commercial01`, `acheteur01`, `magasin01`, `compta01`
 (même mot de passe, rôles restreints).
 

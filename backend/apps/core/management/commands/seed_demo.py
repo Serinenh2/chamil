@@ -48,7 +48,7 @@ class Command(BaseCommand):
         settings_obj, _ = CommercialSettings.objects.get_or_create(company=company)
 
         owner_user, created = User.objects.get_or_create(
-            username="karim", defaults=dict(
+            username="admin", defaults=dict(
                 first_name="Karim", last_name="Benali", email="k.benali@bureautique-alger.dz",
                 role=Role.OWNER, is_staff=True, is_superuser=True, language="fr"),
         )
@@ -190,7 +190,7 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Jeu de démonstration créé."))
         self.stdout.write(f"  Entreprise      : {company.name}")
-        self.stdout.write(f"  Dirigeant       : karim / Chamil2026!")
+        self.stdout.write(f"  Dirigeant       : admin / Chamil2026!")
         self.stdout.write(f"  Commande achat  : {order.number} — {order.amount_ttc}")
         self.stdout.write(f"  Réception       : {receipt.number} (stock appliqué)")
         self.stdout.write(f"  Stock restant   : {product.stock_quantity}")
