@@ -69,5 +69,13 @@
     "leadTime": "Délai de livraison (jours)", "warranty": "Garantie (mois)", "active": "Actif",
     "confirmDelete": "Supprimer ce fournisseur ?",
     "deleteError": "Impossible de supprimer : ce fournisseur est référencé par des documents existants."
+  },
+  "purchaseOrders": {
+    "new": "Nouvelle commande", "edit": "Modifier la commande",
+    "paymentTerm": "Conditions de paiement", "expectedOn": "Livraison prévue",
+    "responsible": "Responsable", "deliveryAddress": "Adresse de livraison",
+    "lines": "Lignes de commande", "addLine": "Ajouter une ligne",
+    "confirmDelete": "Supprimer cette commande ?",
+    "deleteError": "Impossible de supprimer : cette commande est référencée par des documents existants."
   }
 }

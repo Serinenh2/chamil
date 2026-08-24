@@ -68,14 +68,55 @@ class SupplierQuoteSerializer(DocumentSerializerMixin):
         fields = "__all__"
 
 
+class PurchaseOrderLineWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = PurchaseOrderLine
+        fields = ("id", "product", "description", "quantity", "unit_price", "discount", "vat_rate")
+
+
 class PurchaseOrderSerializer(DocumentSerializerMixin):
     lines = PurchaseOrderLineSerializer(many=True, read_only=True)
+    line_items = PurchaseOrderLineWriteSerializer(many=True, write_only=True, required=False)
     supplier_name = serializers.CharField(source="supplier.name", read_only=True)
     is_late = serializers.BooleanField(read_only=True)
 
     class Meta(DocumentSerializerMixin.Meta):
         model = PurchaseOrder
         fields = "__all__"
+
+    def create(self, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        order = super().create(validated_data)
+        if lines_data is not None:
+            self._sync_lines(order, lines_data)
+        return order.recompute()
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        order = super().update(instance, validated_data)
+        if lines_data is not None:
+            self._sync_lines(order, lines_data)
+        return order.recompute()
+
+    def _sync_lines(self, order, lines_data):
+        existing = {line.id: line for line in order.lines.all()}
+        keep_ids = set()
+        for line_data in lines_data:
+            line_id = line_data.pop("id", None)
+            if line_id and line_id in existing:
+                line = existing[line_id]
+                for attr, value in line_data.items():
+                    setattr(line, attr, value)
+                line.save()
+                keep_ids.add(line_id)
+            else:
+                new_line = PurchaseOrderLine.objects.create(order=order, **line_data)
+                keep_ids.add(new_line.id)
+        for line_id, line in existing.items():
+            if line_id not in keep_ids:
+                line.delete()
 
 
 class PurchaseOrderListSerializer(serializers.ModelSerializer):
