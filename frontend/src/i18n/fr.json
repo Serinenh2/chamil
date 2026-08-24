@@ -60,15 +60,23 @@
   },
   "alerts": { "title": "Centre d'alertes", "markAllRead": "Tout marquer comme lu",
               "resolve": "Traiter", "none": "Aucune alerte en cours" },
-  "suppliers": {
-    "new": "Nouveau fournisseur", "edit": "Modifier le fournisseur",
+  "partners": {
     "code": "Code", "name": "Raison sociale", "nameAr": "التسمية", "tradeName": "Nom commercial",
     "legalForm": "Forme juridique", "activity": "Activité", "address": "Adresse",
     "email": "E-mail", "website": "Site web", "paymentTerm": "Conditions de paiement",
-    "discount": "Remise (%)", "bank": "Banque", "notes": "Observations",
-    "leadTime": "Délai de livraison (jours)", "warranty": "Garantie (mois)", "active": "Actif",
+    "discount": "Remise (%)", "bank": "Banque", "notes": "Observations", "active": "Actif"
+  },
+  "suppliers": {
+    "new": "Nouveau fournisseur", "edit": "Modifier le fournisseur",
+    "leadTime": "Délai de livraison (jours)", "warranty": "Garantie (mois)",
     "confirmDelete": "Supprimer ce fournisseur ?",
     "deleteError": "Impossible de supprimer : ce fournisseur est référencé par des documents existants."
+  },
+  "customers": {
+    "new": "Nouveau client", "edit": "Modifier le client",
+    "customerType": "Type de client", "creditLimit": "Plafond de crédit",
+    "confirmDelete": "Supprimer ce client ?",
+    "deleteError": "Impossible de supprimer : ce client est référencé par des documents existants."
   },
   "purchaseOrders": {
     "new": "Nouvelle commande", "edit": "Modifier la commande",

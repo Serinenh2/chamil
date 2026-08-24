@@ -198,7 +198,7 @@ export default function PurchaseOrdersPage() {
                     <th className="th min-w-[180px]">{t('table.name')}</th>
                     <th className="th min-w-[84px] text-end">{t('table.quantity')}</th>
                     <th className="th min-w-[132px] text-end">{t('table.price')}</th>
-                    <th className="th min-w-[84px] text-end">{t('suppliers.discount')}</th>
+                    <th className="th min-w-[84px] text-end">{t('partners.discount')}</th>
                     <th className="th min-w-[100px] text-end">TVA %</th>
                     <th className="th min-w-[130px] text-end">{t('table.amount')}</th>
                     <th className="th" />
@@ -255,7 +255,7 @@ export default function PurchaseOrdersPage() {
             </div>
 
             <div className="mt-4">
-              <Field label={t('suppliers.notes')}>
+              <Field label={t('partners.notes')}>
                 <Textarea value={form.notes}
                           onChange={(e) => setForm({ ...form, notes: e.target.value })} />
               </Field>
