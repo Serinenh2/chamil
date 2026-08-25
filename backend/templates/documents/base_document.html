@@ -6,7 +6,15 @@
 <title>{{ document.number }}</title>
 <style>
   /* Reprend les jetons du design system CHAMIL (aligné MRAFIQ) */
-  @page { size: A4; margin: 18mm 16mm 20mm; }
+  @page { size: A4; margin: 18mm 16mm 20mm;
+    {% if language == 'ar' %}
+    @bottom-left { content: "Page " counter(page) "/" counter(pages); font-size: 5.5pt;
+                  color: #8A96A3; font-family: "IBM Plex Mono", "Consolas", monospace; }
+    {% else %}
+    @bottom-right { content: "Page " counter(page) "/" counter(pages); font-size: 5.5pt;
+                    color: #8A96A3; font-family: "IBM Plex Mono", "Consolas", monospace; }
+    {% endif %}
+  }
   body { font-family: "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif;
          font-size: 10.5pt; color: #14212F; line-height: 1.55; }
   .data { font-family: "IBM Plex Mono", "Consolas", monospace; direction: ltr; unicode-bidi: isolate; }
@@ -18,7 +26,7 @@
   .identity .logo-cell { padding-right: 12px; }
   .identity img { height: 52px; width: auto; max-width: 140px; display: block; }
   .brand { font-size: 16pt; font-weight: 700; color: #0B2545; }
-  .brand .capital { display: block; font-size: 8pt; font-weight: 600;
+  .brand .capital { display: block; font-size: 7.5pt; font-weight: 600; line-height: 1.25;
                     color: #000000; margin-top: 2px; }
   .ref-box { margin-left: auto; border: 1px solid #C6D1E0; border-radius: 6px; min-width: 210px; }
   .ref-box tr td { padding: 4px 10px; font-size: 9pt; border-bottom: 1px solid #E1E7F0;
@@ -26,6 +34,19 @@
   .ref-box tr:last-child td { border-bottom: none; }
   .ref-box td:first-child { color: #000000; text-align: left; }
   .ref-box td:last-child { font-weight: 600; text-align: left; }
+
+  .company-info-box { margin: 4px 8px 0 0; border: 1px solid #C6D1E0; border-radius: 6px;
+                      background: #F7F9FC; padding: 4px 10px; }
+  .company-info-box .info-grid { display: flex; flex-wrap: wrap; }
+  .company-info-box .info-item { flex: 0 0 50%; display: flex; align-items: baseline;
+                                 padding: 1.5px 6px 1.5px 0; font-size: 8pt;
+                                 overflow: hidden; white-space: nowrap; }
+  .company-info-box .info-item.wide { flex: 0 0 100%; }
+  .company-info-box .info-item b { font-size: 7.25pt; text-transform: uppercase;
+                                   letter-spacing: .03em; color: #000000; flex-shrink: 0;
+                                   margin-right: 4px; }
+  .company-info-box .info-item b::after { content: ":"; }
+  .company-info-box .info-item span { overflow: hidden; text-overflow: ellipsis; }
 
   h1.doc-title { text-align: center; font-size: 15pt; color: #fff; background: #0B2545;
                  margin: 22px 0 14px; padding: 8px 12px; border-radius: 6px; }
@@ -45,6 +66,9 @@
                          font-size: 8.75pt; text-transform: uppercase; letter-spacing: .06em; }
   table.lines tbody td { padding: 7px 9px; border-bottom: 1px solid #E1E7F0; }
   table.lines tbody tr.filler td { height: 90px; border-bottom: none; }
+  table.lines tbody tr.subtotal-row td, table.lines tbody tr.report-row td {
+    background: #EDF1F7; font-weight: 700; border-top: 1px solid #C6D1E0;
+    border-bottom: 1px solid #C6D1E0; }
   td.num, th.num { text-align: end; font-family: "IBM Plex Mono", "Consolas", monospace;
                    direction: ltr; unicode-bidi: isolate; }
 
@@ -71,12 +95,10 @@
   .sig { text-align: center; font-size: 8.5pt; color: #000000; }
   .sig img { max-height: 60px; display: block; margin: 0 auto 4px; }
 
-  footer { position: fixed; bottom: 0; inset-inline: 0; font-size: 7.5pt;
+  footer { position: fixed; bottom: 0; left: 0; right: 0; font-size: 7.5pt;
            color: #000000; text-align: center; border-top: 1px solid #E1E7F0;
            padding-top: 6px; }
   footer .legal { margin-top: 2px; }
-  footer .page-number { margin-top: 2px; font-family: "IBM Plex Mono", "Consolas", monospace; }
-  footer .page-number::after { content: "Page : " counter(page) " / " counter(pages); }
 </style>
 </head>
 <body>
@@ -87,8 +109,19 @@
       <div class="name-cell">
         <div class="brand">
           {{ company.name }}
-          <span class="capital">Au capital de {{ company.capital }} {{ settings.currency }}</span>
+          <span class="capital">Vente en gros Matériel Informatique/Mobilier de bureau/Consomable informatique/Papeterie</span>
         </div>
+      </div>
+    </div>
+    <div class="company-info-box">
+      <div class="info-grid">
+        <div class="info-item"><b>RC</b><span class="data">{{ company.rc|default:"—" }}</span></div>
+        <div class="info-item"><b>NIF</b><span class="data">{{ company.nif|default:"—" }}</span></div>
+        <div class="info-item"><b>AI</b><span class="data">{{ company.tax_article|default:"—" }}</span></div>
+        <div class="info-item"><b>NIS</b><span class="data">{{ company.nis|default:"—" }}</span></div>
+        <div class="info-item"><b>RIB</b><span class="data">{{ company.rib|default:"—" }}</span></div>
+        <div class="info-item"><b>Tél</b><span class="data">{{ company.phone|default:"—" }}</span></div>
+        <div class="info-item wide"><b>Siège</b><span>{{ company.address|default:"—" }}</span></div>
       </div>
     </div>
   </div>
@@ -123,6 +156,7 @@
 </div>
 {% endblock %}
 
+{% block lines_table %}
 <table class="lines">
   <thead>
     <tr>
@@ -152,6 +186,7 @@
     <tr class="filler"><td colspan="8"></td></tr>
   </tbody>
 </table>
+{% endblock %}
 
 <table class="totals-combined">
     <tr>
@@ -190,15 +225,10 @@
 </div>
 
 <footer>
-  <div class="data">
-    RC {{ company.rc }} · NIF {{ company.nif }} · N° Article {{ company.tax_article }} ·
-    N° I.S. {{ company.nis }} · Tél {{ company.phone }}
-  </div>
   <div class="legal">
     {{ settings.legal_mentions }}
     {% if settings.invoice_footer %} — {{ settings.invoice_footer }}{% endif %}
   </div>
-  <div class="page-number"></div>
 </footer>
 </body>
 </html>

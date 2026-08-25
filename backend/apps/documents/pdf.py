@@ -41,6 +41,43 @@ def amount_in_words(amount, currency="DA"):
     return text
 
 
+# Nombre approximatif de lignes qui tiennent sur la 1ère page (avec l'en-tête,
+# le titre et l'encart destinataire au-dessus) puis sur les pages suivantes
+# (qui démarrent directement par le tableau) — calibré visuellement.
+QUOTE_FIRST_PAGE_LINES = 8
+QUOTE_OTHER_PAGE_LINES = 15
+
+
+def _quote_line_pages(lines):
+    """Découpe les lignes du devis par page avec sous-total de report.
+
+    Renvoie None si tout tient sur une seule page (rendu par défaut,
+    pagination naturelle de WeasyPrint) ou la liste des pages sinon,
+    chacune portant son propre sous-total et le sous-total reporté de
+    la page précédente (section : sous-total page 1 + sous-total page 2
+    + ... = total général du document, déjà affiché en pied de document).
+    """
+    lines = list(lines)
+    if len(lines) <= QUOTE_FIRST_PAGE_LINES:
+        return None
+    chunks = []
+    idx, size = 0, QUOTE_FIRST_PAGE_LINES
+    while idx < len(lines):
+        chunks.append(lines[idx:idx + size])
+        idx += size
+        size = QUOTE_OTHER_PAGE_LINES
+    subtotals = [sum((line.amount_ht for line in chunk), Decimal("0")) for chunk in chunks]
+    return [
+        {
+            "lines": chunk,
+            "subtotal_ht": subtotals[i],
+            "is_last": i == len(chunks) - 1,
+            "report_amount": subtotals[i - 1] if i > 0 else None,
+        }
+        for i, chunk in enumerate(chunks)
+    ]
+
+
 REFERENCE_DATE_FIELD = {
     "quote": ("valid_until", "Validité"),
     "sales_order": ("expected_on", "Livraison prévue"),
@@ -61,11 +98,15 @@ def document_context(document, kind):
     currency = settings_obj.currency if settings_obj else "DA"
     field, label = REFERENCE_DATE_FIELD.get(kind, (None, None))
     party = getattr(document, "customer", None) or getattr(document, "supplier", None)
+    lines = document.lines.all() if hasattr(document, "lines") else []
+    line_pages = _quote_line_pages(lines) if kind == "quote" else None
     return {
         "document": document,
         "kind": kind,
         "party": party,
-        "lines": document.lines.all() if hasattr(document, "lines") else [],
+        "lines": lines,
+        "line_pages": line_pages,
+        "multipage": bool(line_pages),
         "company": company,
         "settings": settings_obj,
         "owner": owner,

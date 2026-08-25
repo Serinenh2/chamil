@@ -1,2 +1,57 @@
 {% extends "documents/base_document.html" %}
 {% block doc_title %}Proforma{% endblock %}
+
+{% block lines_table %}
+{% if multipage %}
+  {% for page in line_pages %}
+  {% if page.report_amount is not None %}
+  <table class="lines report-table" style="page-break-before: always;">
+    <tbody>
+      <tr class="report-row">
+        <td colspan="6">Report du sous-total (page précédente)</td>
+        <td colspan="2" class="num">{{ page.report_amount|floatformat:2 }} {{ settings.currency }}</td>
+      </tr>
+    </tbody>
+  </table>
+  {% endif %}
+  <table class="lines">
+    <thead>
+      <tr>
+        <th>Réf. article</th>
+        <th>Désignation</th>
+        <th>Unité</th>
+        <th class="num">Quantité</th>
+        <th class="num">Prix U. HT</th>
+        <th class="num">Montant HT</th>
+        <th class="num">Remise</th>
+        <th class="num">TVA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for line in page.lines %}
+      <tr>
+        <td class="data">{{ line.product.code }}</td>
+        <td>{{ line.description }}</td>
+        <td>{{ line.product.unit|default:"—" }}</td>
+        <td class="num">{{ line.quantity }}</td>
+        <td class="num">{{ line.unit_price }}</td>
+        <td class="num">{{ line.amount_ht }}</td>
+        <td class="num">{{ line.discount }} %</td>
+        <td class="num">{{ line.vat_rate }} %</td>
+      </tr>
+      {% endfor %}
+      {% if not page.is_last %}
+      <tr class="subtotal-row">
+        <td colspan="6">Sous-total (à reporter page suivante)</td>
+        <td colspan="2" class="num">{{ page.subtotal_ht|floatformat:2 }} {{ settings.currency }}</td>
+      </tr>
+      {% else %}
+      <tr class="filler"><td colspan="8"></td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+  {% endfor %}
+{% else %}
+  {{ block.super }}
+{% endif %}
+{% endblock %}
