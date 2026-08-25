@@ -7,6 +7,8 @@ import { useFormat } from '@/hooks/useFormat'
 import { Alert, Badge, Button, DataTable, Field, Input, Modal, Switch } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAuth } from '@/context/AuthContext'
+import { useUi } from '@/context/UiContext'
+import { wilayaLabel } from '@/constants/geo'
 import PartnerFormFields from './PartnerFormFields'
 
 const EMPTY_FORM = {
@@ -22,6 +24,7 @@ function errorText(error, fallback) {
 
 export default function SuppliersPage() {
   const { t } = useTranslation()
+  const { lang } = useUi()
   const { number } = useFormat()
   const { can } = useAuth()
   const canWrite = can('admin', 'buyer')
@@ -66,7 +69,7 @@ export default function SuppliersPage() {
       render: (r) => <span className="font-semibold">{r.name}</span> },
     { key: 'phone', label: t('table.phone'),
       render: (r) => <span className="data">{r.phone || '—'}</span> },
-    { key: 'wilaya', label: t('table.wilaya') },
+    { key: 'wilaya', label: t('table.wilaya'), render: (r) => wilayaLabel(r.wilaya, lang) || '—' },
     { key: 'score', label: t('table.score'), align: 'num',
       render: (r) => number(r.score) },
     { key: 'is_active', label: t('table.status'),

@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Field, Input, Select, Textarea } from '@/components/ui'
-import { PAYMENT_TERMS, WILAYAS } from '@/constants/choices'
+import { PAYMENT_TERMS } from '@/constants/choices'
+import { communeOptions, wilayaOptions } from '@/constants/geo'
+import { useUi } from '@/context/UiContext'
 
 /**
  * Champs communs aux fournisseurs et clients (PartnerBase côté backend).
@@ -9,6 +11,7 @@ import { PAYMENT_TERMS, WILAYAS } from '@/constants/choices'
  */
 export default function PartnerFormFields({ form, setForm, codeHint, children }) {
   const { t } = useTranslation()
+  const { lang } = useUi()
   const set = (patch) => setForm({ ...form, ...patch })
 
   return (
@@ -32,13 +35,18 @@ export default function PartnerFormFields({ form, setForm, codeHint, children })
         <Input value={form.activity} onChange={(e) => set({ activity: e.target.value })} />
       </Field>
       <Field label={t('table.wilaya')}>
-        <Select value={form.wilaya} onChange={(e) => set({ wilaya: e.target.value })}>
+        <Select value={form.wilaya}
+                onChange={(e) => set({ wilaya: e.target.value, commune: '' })}>
           <option value="">—</option>
-          {WILAYAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+          {wilayaOptions(lang).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
         </Select>
       </Field>
       <Field label={t('table.commune')}>
-        <Input value={form.commune} onChange={(e) => set({ commune: e.target.value })} />
+        <Select value={form.commune} disabled={!form.wilaya}
+                onChange={(e) => set({ commune: e.target.value })}>
+          <option value="">—</option>
+          {communeOptions(form.wilaya, lang).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+        </Select>
       </Field>
       <Field label={t('table.phone')}>
         <Input value={form.phone} onChange={(e) => set({ phone: e.target.value })} />

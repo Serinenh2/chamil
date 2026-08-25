@@ -6,7 +6,9 @@ import { useEndpoint } from '@/hooks/useResource'
 import { useFormat } from '@/hooks/useFormat'
 import { useAuth } from '@/context/AuthContext'
 import { Alert, Button, Card, Field, Input, KeyValue, Select, Spinner, Textarea } from '@/components/ui'
-import { PAYMENT_TERMS, WILAYAS } from '@/constants/choices'
+import { PAYMENT_TERMS } from '@/constants/choices'
+import { communeLabel, communeOptions, wilayaLabel, wilayaOptions } from '@/constants/geo'
+import { useUi } from '@/context/UiContext'
 import ImageUploader from './ImageUploader'
 
 const LEGAL_FORMS = [
@@ -22,6 +24,7 @@ function errorText(error, fallback) {
 /** Identité légale de l'entreprise et paramètres commerciaux (sections 39.2 et 39.3). */
 export default function CompanyTab({ compact = false, settingsOnly = false }) {
   const { t } = useTranslation()
+  const { lang } = useUi()
   const { money, date } = useFormat()
   const { can } = useAuth()
   const qc = useQueryClient()
@@ -159,14 +162,17 @@ export default function CompanyTab({ compact = false, settingsOnly = false }) {
             </Field>
             <Field label={t('table.wilaya')}>
               <Select value={companyForm.wilaya}
-                      onChange={(e) => setCompanyForm({ ...companyForm, wilaya: e.target.value })}>
+                      onChange={(e) => setCompanyForm({ ...companyForm, wilaya: e.target.value, commune: '' })}>
                 <option value="">—</option>
-                {WILAYAS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                {wilayaOptions(lang).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
               </Select>
             </Field>
             <Field label={t('table.commune')}>
-              <Input value={companyForm.commune}
-                     onChange={(e) => setCompanyForm({ ...companyForm, commune: e.target.value })} />
+              <Select value={companyForm.commune} disabled={!companyForm.wilaya}
+                      onChange={(e) => setCompanyForm({ ...companyForm, commune: e.target.value })}>
+                <option value="">—</option>
+                {communeOptions(companyForm.wilaya, lang).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+              </Select>
             </Field>
             {!compact && <>
               <Field label={t('table.phone')}>
@@ -215,8 +221,9 @@ export default function CompanyTab({ compact = false, settingsOnly = false }) {
           <KeyValue label="NIF" value={company?.nif} mono />
           <KeyValue label="NIS" value={company?.nis} mono />
           <KeyValue label="AI" value={company?.tax_article} mono />
-          <KeyValue label={t('table.wilaya')} value={company?.wilaya_label} />
-          <KeyValue label={t('table.commune')} value={company?.commune} />
+          <KeyValue label={t('table.wilaya')} value={wilayaLabel(company?.wilaya, lang)} />
+          <KeyValue label={t('table.commune')}
+                    value={communeLabel(company?.wilaya, company?.commune, lang)} />
           {!compact && <>
             <KeyValue label={t('table.phone')} value={company?.phone} mono />
             <KeyValue label="Email" value={company?.email} mono />
