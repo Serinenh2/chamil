@@ -82,7 +82,9 @@
   },
   "purchaseOrders": {
     "new": "طلبية جديدة", "edit": "تعديل الطلبية",
-    "paymentTerm": "شروط الدفع", "expectedOn": "تاريخ التسليم المتوقع",
+    "paymentTerm": "شروط الدفع", "paymentMethod": "طريقة الدفع",
+    "discount": "التخفيض (%)", "leadTime": "مهلة التسليم (أيام)",
+    "warranty": "الضمان (أشهر)", "expectedOn": "تاريخ التسليم المتوقع",
     "responsible": "المسؤول", "deliveryAddress": "عنوان التسليم",
     "lines": "بنود الطلبية", "addLine": "إضافة بند",
     "confirmDelete": "هل تريد حذف هذه الطلبية؟",

@@ -4,7 +4,7 @@ import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { rest } from '@/services/api'
 import { useList, useRemove, useSave } from '@/hooks/useResource'
 import { useFormat } from '@/hooks/useFormat'
-import { Alert, Badge, Button, DataTable, Field, Input, Modal, Switch } from '@/components/ui'
+import { Alert, Badge, Button, DataTable, Input, Modal, Switch } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAuth } from '@/context/AuthContext'
 import { useUi } from '@/context/UiContext'
@@ -122,16 +122,8 @@ export default function SuppliersPage() {
               <Alert tone="error">{errorText(saveSupplier.error, t('common.error'))}</Alert>
             )}
             <div className="grid gap-4 sm:grid-cols-2">
-              <PartnerFormFields form={form} setForm={setForm} codeHint="Identifiant unique, ex : FRN004.">
-                <Field label={t('suppliers.leadTime')}>
-                  <Input type="number" value={form.lead_time_days}
-                         onChange={(e) => setForm({ ...form, lead_time_days: e.target.value })} />
-                </Field>
-                <Field label={t('suppliers.warranty')}>
-                  <Input type="number" value={form.warranty_months}
-                         onChange={(e) => setForm({ ...form, warranty_months: e.target.value })} />
-                </Field>
-              </PartnerFormFields>
+              <PartnerFormFields form={form} setForm={setForm} codeHint="Identifiant unique, ex : FRN004."
+                                 showPaymentDiscount={false} />
             </div>
 
             <Switch checked={!!form.is_active}

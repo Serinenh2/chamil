@@ -9,14 +9,15 @@ import {
 } from '@/components/ui'
 import PageHeader from '@/components/layout/PageHeader'
 import { useAuth } from '@/context/AuthContext'
-import { PAYMENT_TERMS } from '@/constants/choices'
+import { PAYMENT_TERMS, PURCHASE_ORDER_PAYMENT_METHODS } from '@/constants/choices'
 
 const TONE = { draft: 'draft', pending: 'pending', validated: 'ok',
                partial: 'pending', completed: 'ok', cancelled: 'cancelled' }
 
 const EMPTY_LINE = { product: '', quantity: 1, unit_price: 0, discount: 0, vat_rate: 19 }
 const EMPTY_FORM = {
-  supplier: '', payment_term: '30', expected_on: '', delivery_address: '',
+  supplier: '', payment_term: '30', payment_method: '', discount: 0,
+  lead_time_days: 0, warranty_months: 12, expected_on: '', delivery_address: '',
   responsible: '', notes: '', line_items: [{ ...EMPTY_LINE }],
 }
 
@@ -62,6 +63,8 @@ export default function PurchaseOrdersPage() {
       setForm({
         id: detail.id,
         supplier: detail.supplier, payment_term: detail.payment_term,
+        payment_method: detail.payment_method || '', discount: detail.discount ?? 0,
+        lead_time_days: detail.lead_time_days ?? 0, warranty_months: detail.warranty_months ?? 12,
         expected_on: detail.expected_on || '', delivery_address: detail.delivery_address || '',
         responsible: detail.responsible || '', notes: detail.notes || '',
         line_items: detail.lines.length
@@ -174,6 +177,25 @@ export default function PurchaseOrdersPage() {
                         onChange={(e) => setForm({ ...form, payment_term: e.target.value })}>
                   {PAYMENT_TERMS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                 </Select>
+              </Field>
+              <Field label={t('purchaseOrders.paymentMethod')}>
+                <Select value={form.payment_method}
+                        onChange={(e) => setForm({ ...form, payment_method: e.target.value })}>
+                  <option value="">—</option>
+                  {PURCHASE_ORDER_PAYMENT_METHODS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                </Select>
+              </Field>
+              <Field label={t('purchaseOrders.discount')}>
+                <Input type="number" step="0.01" value={form.discount}
+                       onChange={(e) => setForm({ ...form, discount: e.target.value })} />
+              </Field>
+              <Field label={t('purchaseOrders.leadTime')}>
+                <Input type="number" value={form.lead_time_days}
+                       onChange={(e) => setForm({ ...form, lead_time_days: e.target.value })} />
+              </Field>
+              <Field label={t('purchaseOrders.warranty')}>
+                <Input type="number" value={form.warranty_months}
+                       onChange={(e) => setForm({ ...form, warranty_months: e.target.value })} />
               </Field>
               <Field label={t('purchaseOrders.expectedOn')}>
                 <Input type="date" value={form.expected_on}

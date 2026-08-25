@@ -81,7 +81,9 @@
   },
   "purchaseOrders": {
     "new": "Nouvelle commande", "edit": "Modifier la commande",
-    "paymentTerm": "Conditions de paiement", "expectedOn": "Livraison prévue",
+    "paymentTerm": "Conditions de paiement", "paymentMethod": "Mode de paiement",
+    "discount": "Remise (%)", "leadTime": "Délai de livraison (jours)",
+    "warranty": "Garantie (mois)", "expectedOn": "Livraison prévue",
     "responsible": "Responsable", "deliveryAddress": "Adresse de livraison",
     "lines": "Lignes de commande", "addLine": "Ajouter une ligne",
     "confirmDelete": "Supprimer cette commande ?",

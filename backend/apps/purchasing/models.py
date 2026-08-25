@@ -109,6 +109,12 @@ class SupplierQuoteLine(LineBase):
     quote = models.ForeignKey(SupplierQuote, on_delete=models.CASCADE, related_name="lines")
 
 
+class PurchaseOrderPaymentMethod(models.TextChoices):
+    CASH = "cash", _("Espèce")
+    CERTIFIED_CHECK = "certified_check", _("Chèque certifié")
+    TRANSFER = "transfer", _("Virement")
+
+
 class PurchaseOrder(DocumentBase):
     """Commande fournisseur — section 7."""
 
@@ -119,6 +125,11 @@ class PurchaseOrder(DocumentBase):
                               related_name="orders")
     payment_term = models.CharField(_("conditions de paiement"), max_length=10,
                                     choices=PaymentTerm.choices, default=PaymentTerm.D30)
+    payment_method = models.CharField(_("mode de paiement"), max_length=20,
+                                      choices=PurchaseOrderPaymentMethod.choices, blank=True)
+    discount = models.DecimalField(_("remise (%)"), max_digits=5, decimal_places=2, default=0)
+    lead_time_days = models.PositiveIntegerField(_("délai de livraison (jours)"), default=0)
+    warranty_months = models.PositiveIntegerField(_("garantie (mois)"), default=12)
     delivery_address = models.TextField(_("adresse de livraison"), blank=True)
     expected_on = models.DateField(_("livraison prévue"), null=True, blank=True)
     responsible = models.CharField(_("responsable"), max_length=120, blank=True)

@@ -9,7 +9,7 @@ import { useUi } from '@/context/UiContext'
  * `children` insère les champs propres à chaque entité (ex: délai/garantie
  * pour un fournisseur, type/plafond pour un client) juste avant l'adresse.
  */
-export default function PartnerFormFields({ form, setForm, codeHint, children }) {
+export default function PartnerFormFields({ form, setForm, codeHint, children, showPaymentDiscount = true }) {
   const { t } = useTranslation()
   const { lang } = useUi()
   const set = (patch) => setForm({ ...form, ...patch })
@@ -71,15 +71,19 @@ export default function PartnerFormFields({ form, setForm, codeHint, children })
           </Field>
         </>
       )}
-      <Field label={t('partners.paymentTerm')}>
-        <Select value={form.payment_term} onChange={(e) => set({ payment_term: e.target.value })}>
-          {PAYMENT_TERMS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-        </Select>
-      </Field>
-      <Field label={t('partners.discount')}>
-        <Input type="number" step="0.01" value={form.discount}
-               onChange={(e) => set({ discount: e.target.value })} />
-      </Field>
+      {showPaymentDiscount && (
+        <>
+          <Field label={t('partners.paymentTerm')}>
+            <Select value={form.payment_term} onChange={(e) => set({ payment_term: e.target.value })}>
+              {PAYMENT_TERMS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+            </Select>
+          </Field>
+          <Field label={t('partners.discount')}>
+            <Input type="number" step="0.01" value={form.discount}
+                   onChange={(e) => set({ discount: e.target.value })} />
+          </Field>
+        </>
+      )}
       <Field label={t('partners.bank')}>
         <Input value={form.bank} onChange={(e) => set({ bank: e.target.value })} />
       </Field>
