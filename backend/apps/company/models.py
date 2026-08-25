@@ -6,9 +6,12 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import PaymentTerm, TimeStampedModel, VatRate, Wilaya
 
+# Le format officiel varie selon l'ancienneté du registre (ex : 16/00-1234567B26
+# ou 99B0123456) — on valide juste la composition générale, sans imposer un
+# gabarit unique qui rejetterait des numéros réels valides.
 rc_validator = RegexValidator(
-    r"^\d{2}/\d{2}-\d{7}[A-Z]\d{2}$",
-    _("Format attendu : 16/00-1234567B26."),
+    r"^[A-Za-z0-9/\-]{5,30}$",
+    _("Utilisez uniquement chiffres, lettres, « / » et « - »."),
 )
 
 
