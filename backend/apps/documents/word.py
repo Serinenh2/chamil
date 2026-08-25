@@ -4,10 +4,49 @@ from io import BytesIO
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 NAVY = RGBColor(0x0B, 0x25, 0x45)
 BLUE = RGBColor(0x1B, 0x5C, 0xB4)
+BLUE_HEX = "1B5CB4"
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
+
+
+def _shade_cell(cell, hex_color):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    shd = OxmlElement("w:shd")
+    shd.set(qn("w:val"), "clear")
+    shd.set(qn("w:color"), "auto")
+    shd.set(qn("w:fill"), hex_color)
+    tc_pr.append(shd)
+
+
+def _add_field(paragraph, field_code):
+    run = paragraph.add_run()
+    fld_char1 = OxmlElement("w:fldChar")
+    fld_char1.set(qn("w:fldCharType"), "begin")
+    instr_text = OxmlElement("w:instrText")
+    instr_text.set(qn("xml:space"), "preserve")
+    instr_text.text = field_code
+    fld_char2 = OxmlElement("w:fldChar")
+    fld_char2.set(qn("w:fldCharType"), "end")
+    run._r.append(fld_char1)
+    run._r.append(instr_text)
+    run._r.append(fld_char2)
+
+
+def _add_page_number_footer(section):
+    footer = section.footer
+    p = footer.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("Page : ")
+    run.font.size = Pt(7.5)
+    _add_field(p, "PAGE")
+    run2 = p.add_run(" / ")
+    run2.font.size = Pt(7.5)
+    _add_field(p, "NUMPAGES")
 
 DOC_TITLES = {
     "quote": "Proforma",
@@ -47,7 +86,7 @@ def render_document_word(document, kind, context):
     run = capital.add_run(
         f"Au capital de {company.capital} {currency}" if company else "")
     run.font.size = Pt(8)
-    run.font.color.rgb = RGBColor(0x51, 0x61, 0x7A)
+    run.font.color.rgb = RGBColor(0x00, 0x00, 0x00)
 
     ref_table = doc.add_table(rows=0, cols=2)
     ref_table.alignment = WD_TABLE_ALIGNMENT.RIGHT
@@ -64,10 +103,16 @@ def render_document_word(document, kind, context):
     if context.get("reference_date"):
         ref_row(context["reference_date_label"], context["reference_date"].strftime("%Y-%m-%d"))
 
-    title = doc.add_heading(level=1)
-    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    run = title.add_run(f"{DOC_TITLES.get(kind, 'Document')} N° : {document.number}")
-    run.font.color.rgb = BLUE
+    title_table = doc.add_table(rows=1, cols=1)
+    title_cell = title_table.rows[0].cells[0]
+    _shade_cell(title_cell, BLUE_HEX)
+    title_p = title_cell.paragraphs[0]
+    title_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    title_run = title_p.add_run(f"{DOC_TITLES.get(kind, 'Document')} N° : {document.number}")
+    title_run.font.size = Pt(14)
+    title_run.bold = True
+    title_run.font.color.rgb = WHITE
+    doc.add_paragraph()
 
     doc.add_paragraph(f"Code client : {getattr(party, 'code', '') or '—'}")
     doc.add_paragraph(f"N° RC : {getattr(party, 'rc', '') or '—'}")
@@ -154,6 +199,7 @@ def render_document_word(document, kind, context):
         f"RC {getattr(company, 'rc', '')} · NIF {getattr(company, 'nif', '')} · "
         f"N° I.S. {getattr(company, 'nis', '')} · Tél {getattr(company, 'phone', '')}"
     )
+    _add_page_number_footer(section)
 
     buffer = BytesIO()
     doc.save(buffer)

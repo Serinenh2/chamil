@@ -1,8 +1,3 @@
 {% extends "documents/base_document.html" %}
 {% block doc_title %}Facture{% endblock %}
-{% block after_totals %}
-<table class="totals-box" style="margin-top:8px">
-  <tr><td>Montant payé</td><td class="num">{{ document.paid_amount }} {{ settings.currency }}</td></tr>
-  <tr><td>Net à payer</td><td class="num">{{ document.balance }} {{ settings.currency }}</td></tr>
-</table>
-{% endblock %}
+{% block net_a_payer %}{{ document.balance }}{% endblock %}
