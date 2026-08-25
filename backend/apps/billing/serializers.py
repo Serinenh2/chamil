@@ -26,8 +26,17 @@ class InvoiceMixin(DocumentSerializerMixin):
     ageing_bucket = serializers.CharField(read_only=True)
 
 
+class CustomerInvoiceLineWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = CustomerInvoiceLine
+        fields = ("id", "product", "description", "quantity", "unit_price", "discount", "vat_rate")
+
+
 class CustomerInvoiceSerializer(InvoiceMixin):
     lines = CustomerInvoiceLineSerializer(many=True, read_only=True)
+    line_items = CustomerInvoiceLineWriteSerializer(many=True, write_only=True, required=False)
     customer_name = serializers.CharField(source="customer.name", read_only=True)
 
     class Meta(DocumentSerializerMixin.Meta):
@@ -35,6 +44,42 @@ class CustomerInvoiceSerializer(InvoiceMixin):
         fields = "__all__"
         read_only_fields = ("number", "amount_ht", "amount_vat", "amount_ttc",
                             "paid_amount", "created_by", "updated_by")
+
+    def create(self, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        invoice = super().create(validated_data)
+        if lines_data is not None:
+            self._sync_lines(invoice, lines_data)
+        invoice = invoice.recompute()
+        invoice.refresh_status()
+        return invoice
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        invoice = super().update(instance, validated_data)
+        if lines_data is not None:
+            self._sync_lines(invoice, lines_data)
+        invoice = invoice.recompute()
+        invoice.refresh_status()
+        return invoice
+
+    def _sync_lines(self, invoice, lines_data):
+        existing = {line.id: line for line in invoice.lines.all()}
+        keep_ids = set()
+        for line_data in lines_data:
+            line_id = line_data.pop("id", None)
+            if line_id and line_id in existing:
+                line = existing[line_id]
+                for attr, value in line_data.items():
+                    setattr(line, attr, value)
+                line.save()
+                keep_ids.add(line_id)
+            else:
+                new_line = CustomerInvoiceLine.objects.create(invoice=invoice, **line_data)
+                keep_ids.add(new_line.id)
+        for line_id, line in existing.items():
+            if line_id not in keep_ids:
+                line.delete()
 
 
 class CustomerInvoiceListSerializer(serializers.ModelSerializer):

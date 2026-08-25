@@ -4,8 +4,7 @@
     "pilotage": "Pilotage", "dashboard": "Tableau de bord", "stats": "Statistiques",
     "purchasing": "Achats", "suppliers": "Fournisseurs", "purchaseOrders": "Commandes fournisseurs",
     "receipts": "Réceptions", "requests": "Demandes d'achat",
-    "sales": "Ventes", "customers": "Clients", "quotes": "Devis", "orders": "Commandes clients",
-    "deliveries": "Livraisons", "invoices": "Factures", "payments": "Règlements",
+    "sales": "Ventes", "customers": "Clients", "documents": "Documents", "payments": "Règlements",
     "resources": "Ressources", "products": "Produits", "stock": "Stock", "serials": "Numéros de série",
     "alerts": "Alertes", "profile": "Profil", "users": "Utilisateurs", "logout": "Déconnexion"
   },
@@ -15,7 +14,8 @@
     "empty": "Aucun élément à afficher", "error": "Une erreur est survenue",
     "retry": "Réessayer", "actions": "Actions", "total": "Total", "all": "Tous",
     "darkMode": "Mode sombre", "lightMode": "Mode clair", "of": "sur", "page": "Page",
-    "export": "Exporter PDF", "send": "Envoyer", "validate": "Valider", "back": "Retour"
+    "export": "Exporter PDF", "send": "Envoyer", "validate": "Valider", "back": "Retour",
+    "upload": "Téléverser", "change": "Changer"
   },
   "status": {
     "draft": "Brouillon", "pending": "En attente", "validated": "Validé", "partial": "Partiel",
@@ -56,7 +56,8 @@
     "numbering": "Numérotation", "docLang": "Langue des documents", "creditLimit": "Plafond de crédit",
     "changePassword": "Changer le mot de passe", "twoFactor": "Authentification à deux facteurs (2FA)",
     "loginAlert": "Alerte en cas de connexion inhabituelle", "closeSessions": "Fermer les autres sessions",
-    "logins": "Historique des connexions", "device": "Appareil", "preferences": "Préférences"
+    "logins": "Historique des connexions", "device": "Appareil", "preferences": "Préférences",
+    "logo": "Logo", "stamp": "Cachet", "signature": "Signature électronique"
   },
   "alerts": { "title": "Centre d'alertes", "markAllRead": "Tout marquer comme lu",
               "resolve": "Traiter", "none": "Aucune alerte en cours" },
@@ -86,9 +87,18 @@
     "confirmDelete": "Supprimer cette commande ?",
     "deleteError": "Impossible de supprimer : cette commande est référencée par des documents existants."
   },
-  "quotes": {
-    "new": "Nouveau devis", "edit": "Modifier le devis", "validUntil": "Validité",
-    "confirmDelete": "Supprimer ce devis ?",
-    "deleteError": "Impossible de supprimer : ce devis est référencé par des documents existants."
+  "documents": {
+    "tabProforma": "Proforma", "tabBc": "BC", "tabBl": "BL", "tabFacture": "Facture",
+    "new_proforma": "Nouveau proforma", "new_bc": "Nouveau BC", "new_bl": "Nouveau BL",
+    "new_facture": "Nouvelle facture",
+    "edit_proforma": "Modifier le proforma", "edit_bc": "Modifier le BC", "edit_bl": "Modifier le BL",
+    "edit_facture": "Modifier la facture",
+    "generate_bc": "Générer BC", "generate_bl": "Générer BL", "generate_facture": "Générer facture",
+    "validUntil": "Validité", "warehouse": "Entrepôt", "deliveredOn": "Date de livraison",
+    "partial": "Livraison partielle", "receivedBy": "Réceptionné par", "dueDate": "Échéance",
+    "stampDuty": "Timbre fiscal",
+    "downloadPdf": "Télécharger PDF", "downloadWord": "Télécharger Word",
+    "confirmDelete": "Supprimer ce document ?",
+    "deleteError": "Impossible de supprimer : ce document est référencé par d'autres documents."
   }
 }

@@ -1,18 +1,8 @@
 {% extends "documents/base_document.html" %}
 {% block doc_title %}Facture{% endblock %}
-{% block parties %}
-<div class="parties">
-  <div class="party">
-    <b>Émetteur</b>
-    {{ company.name }}<br>{{ company.address }}<br>
-    <span class="data">{{ company.phone }}</span>
-  </div>
-  <div class="party">
-    <b>Destinataire</b>
-    {% if document.customer %}{{ document.customer.name }}<br>{{ document.customer.address }}<br>
-    <span class="data">RC {{ document.customer.rc }} · NIF {{ document.customer.nif }}</span>
-    {% elif document.supplier %}{{ document.supplier.name }}<br>{{ document.supplier.address }}<br>
-    <span class="data">RC {{ document.supplier.rc }} · NIF {{ document.supplier.nif }}</span>{% endif %}
-  </div>
-</div>
+{% block after_totals %}
+<table class="totals-box" style="margin-top:8px">
+  <tr><td>Montant payé</td><td class="num">{{ document.paid_amount }} {{ settings.currency }}</td></tr>
+  <tr><td>Net à payer</td><td class="num">{{ document.balance }} {{ settings.currency }}</td></tr>
+</table>
 {% endblock %}

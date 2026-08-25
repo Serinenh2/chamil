@@ -103,6 +103,7 @@ export default function PurchaseOrdersPage() {
     const payload = {
       ...form,
       line_items: form.line_items.filter((l) => l.product),
+      expected_on: form.expected_on || null,
     }
     saveOrder.mutate(payload, { onSuccess: () => setForm(null) })
   }

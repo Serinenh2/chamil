@@ -16,6 +16,10 @@ django-celery-beat==2.7.0
 
 # --- Génération PDF (support arabe / RTL natif) ------------------------------
 WeasyPrint==63.1
+num2words==0.5.14
+
+# --- Génération Word -----------------------------------------------------------
+python-docx==1.2.0
 
 # --- Documentation API -------------------------------------------------------
 drf-spectacular==0.28.0

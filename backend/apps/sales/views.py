@@ -2,10 +2,10 @@ from django.utils import timezone
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.core.models import DocumentStatus
+from apps.core.models import DocumentStatus, PaymentTerm
 from apps.core.viewsets import BaseModelViewSet
 
-from .models import Delivery, Quote, SalesOrder, SalesOrderLine
+from .models import Delivery, DeliveryLine, Quote, SalesOrder, SalesOrderLine
 from .serializers import (
     DeliverySerializer, QuoteListSerializer, QuoteSerializer, SalesOrderSerializer,
 )
@@ -68,6 +68,27 @@ class SalesOrderViewSet(BaseModelViewSet):
         return Response(self.get_serializer(self.get_object().recompute()).data)
 
     @action(detail=True, methods=["post"])
+    def to_delivery(self, request, pk=None):
+        """Commande client validée → bon de livraison (section 18)."""
+        from apps.stock.models import Warehouse
+
+        order = self.get_object()
+        warehouse = Warehouse.objects.filter(is_default=True).first() or Warehouse.objects.first()
+        if not warehouse:
+            return Response({"detail": "Aucun entrepôt disponible."}, status=400)
+        delivery = Delivery.objects.create(
+            customer=order.customer, order=order, warehouse=warehouse,
+            created_by=request.user,
+        )
+        for line in order.lines.all():
+            DeliveryLine.objects.create(
+                delivery=delivery, product=line.product, description=line.description,
+                quantity=line.quantity, unit_price=line.unit_price,
+                discount=line.discount, vat_rate=line.vat_rate)
+        delivery.recompute()
+        return Response(DeliverySerializer(delivery).data, status=201)
+
+    @action(detail=True, methods=["post"])
     def to_invoice(self, request, pk=None):
         """Commande livrée → facture client (section 19)."""
         from apps.billing.models import CustomerInvoice, CustomerInvoiceLine
@@ -100,3 +121,23 @@ class DeliveryViewSet(BaseModelViewSet):
         """Valide la livraison : sortie de stock + mise à jour de la commande."""
         delivery = self.get_object().apply_to_stock(user=request.user)
         return Response(self.get_serializer(delivery).data)
+
+    @action(detail=True, methods=["post"])
+    def to_invoice(self, request, pk=None):
+        """Livraison → facture client (section 19)."""
+        from apps.billing.models import CustomerInvoice, CustomerInvoiceLine
+        from apps.billing.serializers import CustomerInvoiceSerializer
+
+        delivery = self.get_object()
+        invoice = CustomerInvoice.objects.create(
+            customer=delivery.customer, order=delivery.order, delivery=delivery,
+            payment_term=delivery.order.payment_term if delivery.order else PaymentTerm.D30,
+            status=DocumentStatus.PENDING, created_by=request.user,
+        )
+        for line in delivery.lines.all():
+            CustomerInvoiceLine.objects.create(
+                invoice=invoice, product=line.product, description=line.description,
+                quantity=line.quantity, unit_price=line.unit_price,
+                discount=line.discount, vat_rate=line.vat_rate)
+        invoice.recompute()
+        return Response(CustomerInvoiceSerializer(invoice).data, status=201)

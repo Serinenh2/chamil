@@ -7,6 +7,7 @@ import { useFormat } from '@/hooks/useFormat'
 import { useAuth } from '@/context/AuthContext'
 import { Alert, Button, Card, Field, Input, KeyValue, Select, Spinner, Textarea } from '@/components/ui'
 import { PAYMENT_TERMS, WILAYAS } from '@/constants/choices'
+import ImageUploader from './ImageUploader'
 
 const LEGAL_FORMS = [
   ['EURL', 'EURL'], ['SARL', 'SARL'], ['SPA', 'SPA'], ['SNC', 'SNC'],
@@ -49,6 +50,32 @@ export default function CompanyTab({ compact = false, settingsOnly = false }) {
     },
   })
 
+  const invalidateCompany = () => qc.invalidateQueries({ queryKey: ['/profile/company/current/'] })
+  const uploadLogo = useMutation({
+    mutationFn: (file) => {
+      const fd = new FormData()
+      fd.append('logo', file)
+      return rest.patch('/profile/company/current/', fd)
+    },
+    onSuccess: invalidateCompany,
+  })
+  const deleteLogo = useMutation({
+    mutationFn: () => rest.patch('/profile/company/current/', { logo: null }),
+    onSuccess: invalidateCompany,
+  })
+  const uploadStamp = useMutation({
+    mutationFn: (file) => {
+      const fd = new FormData()
+      fd.append('stamp', file)
+      return rest.patch('/profile/company/current/', fd)
+    },
+    onSuccess: invalidateCompany,
+  })
+  const deleteStamp = useMutation({
+    mutationFn: () => rest.patch('/profile/company/current/', { stamp: null }),
+    onSuccess: invalidateCompany,
+  })
+
   if (isLoading) return <Card><div className="flex justify-center py-6"><Spinner /></div></Card>
 
   const startEditCompany = () => {
@@ -82,6 +109,16 @@ export default function CompanyTab({ compact = false, settingsOnly = false }) {
           )}>
       {saveCompany.isError && (
         <Alert tone="error">{errorText(saveCompany.error, t('common.error'))}</Alert>
+      )}
+      {canEdit && !compact && (
+        <div className="mb-4 grid gap-4 sm:grid-cols-2">
+          <ImageUploader label={t('profile.logo')} imageUrl={company?.logo}
+                         onUpload={(file) => uploadLogo.mutateAsync(file)}
+                         onDelete={() => deleteLogo.mutateAsync()} />
+          <ImageUploader label={t('profile.stamp')} imageUrl={company?.stamp}
+                         onUpload={(file) => uploadStamp.mutateAsync(file)}
+                         onDelete={() => deleteStamp.mutateAsync()} />
+        </div>
       )}
       {editingCompany ? (
         <>
@@ -158,7 +195,9 @@ export default function CompanyTab({ compact = false, settingsOnly = false }) {
           </div>
           <div className="mt-2 flex gap-2">
             <Button size="sm" disabled={saveCompany.isPending}
-                    onClick={() => saveCompany.mutate(companyForm)}>
+                    onClick={() => saveCompany.mutate({
+                      ...companyForm, founded_on: companyForm.founded_on || null,
+                    })}>
               {t('common.save')}
             </Button>
             <Button size="sm" variant="secondary" onClick={() => setEditingCompany(false)}>

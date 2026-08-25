@@ -10,8 +10,7 @@ import SuppliersPage from '@/features/partners/SuppliersPage'
 import CustomersPage from '@/features/partners/CustomersPage'
 import ProductsPage from '@/features/catalog/ProductsPage'
 import PurchaseOrdersPage from '@/features/purchasing/PurchaseOrdersPage'
-import QuotesPage from '@/features/sales/QuotesPage'
-import InvoicesPage from '@/features/billing/InvoicesPage'
+import DocumentsPage from '@/features/sales/DocumentsPage'
 import AlertsPage from '@/features/alerts/AlertsPage'
 import ProfilePage from '@/features/profile/ProfilePage'
 
@@ -35,8 +34,7 @@ export const router = createBrowserRouter([
       { path: 'fournisseurs', element: <Protected roles={['admin', 'buyer', 'accountant']}><SuppliersPage /></Protected> },
       { path: 'commandes-fournisseurs', element: <Protected roles={['admin', 'buyer']}><PurchaseOrdersPage /></Protected> },
       { path: 'clients', element: <Protected roles={['admin', 'sales', 'accountant']}><CustomersPage /></Protected> },
-      { path: 'devis', element: <Protected roles={['admin', 'sales']}><QuotesPage /></Protected> },
-      { path: 'factures', element: <Protected roles={['admin', 'sales', 'accountant']}><InvoicesPage /></Protected> },
+      { path: 'documents', element: <Protected roles={['admin', 'sales', 'accountant', 'stock']}><DocumentsPage /></Protected> },
       { path: 'produits', element: <ProductsPage /> },
       { path: 'alertes', element: <AlertsPage /> },
       { path: 'profil', element: <ProfilePage /> },

@@ -85,19 +85,102 @@ class QuoteListSerializer(serializers.ModelSerializer):
                   "status", "status_label", "valid_until")
 
 
+class SalesOrderLineWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = SalesOrderLine
+        fields = ("id", "product", "description", "quantity", "unit_price", "discount", "vat_rate")
+
+
 class SalesOrderSerializer(DocumentSerializerMixin):
     lines = SalesOrderLineSerializer(many=True, read_only=True)
+    line_items = SalesOrderLineWriteSerializer(many=True, write_only=True, required=False)
     customer_name = serializers.CharField(source="customer.name", read_only=True)
 
     class Meta(DocumentSerializerMixin.Meta):
         model = SalesOrder
         fields = "__all__"
 
+    def create(self, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        order = super().create(validated_data)
+        if lines_data is not None:
+            self._sync_lines(order, lines_data)
+        return order.recompute()
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        order = super().update(instance, validated_data)
+        if lines_data is not None:
+            self._sync_lines(order, lines_data)
+        return order.recompute()
+
+    def _sync_lines(self, order, lines_data):
+        existing = {line.id: line for line in order.lines.all()}
+        keep_ids = set()
+        for line_data in lines_data:
+            line_id = line_data.pop("id", None)
+            if line_id and line_id in existing:
+                line = existing[line_id]
+                for attr, value in line_data.items():
+                    setattr(line, attr, value)
+                line.save()
+                keep_ids.add(line_id)
+            else:
+                new_line = SalesOrderLine.objects.create(order=order, **line_data)
+                keep_ids.add(new_line.id)
+        for line_id, line in existing.items():
+            if line_id not in keep_ids:
+                line.delete()
+
+
+class DeliveryLineWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = DeliveryLine
+        fields = ("id", "product", "description", "quantity", "unit_price", "discount",
+                  "vat_rate", "serial_numbers")
+
 
 class DeliverySerializer(DocumentSerializerMixin):
     lines = DeliveryLineSerializer(many=True, read_only=True)
+    line_items = DeliveryLineWriteSerializer(many=True, write_only=True, required=False)
     customer_name = serializers.CharField(source="customer.name", read_only=True)
 
     class Meta(DocumentSerializerMixin.Meta):
         model = Delivery
         fields = "__all__"
+
+    def create(self, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        delivery = super().create(validated_data)
+        if lines_data is not None:
+            self._sync_lines(delivery, lines_data)
+        return delivery.recompute()
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        delivery = super().update(instance, validated_data)
+        if lines_data is not None:
+            self._sync_lines(delivery, lines_data)
+        return delivery.recompute()
+
+    def _sync_lines(self, delivery, lines_data):
+        existing = {line.id: line for line in delivery.lines.all()}
+        keep_ids = set()
+        for line_data in lines_data:
+            line_id = line_data.pop("id", None)
+            if line_id and line_id in existing:
+                line = existing[line_id]
+                for attr, value in line_data.items():
+                    setattr(line, attr, value)
+                line.save()
+                keep_ids.add(line_id)
+            else:
+                new_line = DeliveryLine.objects.create(delivery=delivery, **line_data)
+                keep_ids.add(new_line.id)
+        for line_id, line in existing.items():
+            if line_id not in keep_ids:
+                line.delete()

@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  AlertTriangle, Boxes, FileText, LayoutDashboard, Package, Receipt, ShoppingCart,
+  AlertTriangle, Boxes, FileText, LayoutDashboard, Package, ShoppingCart,
   TrendingUp, Truck, UserCircle, Users, Wallet,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -26,11 +26,10 @@ const SECTIONS = [
   },
   {
     key: 'sales',
-    roles: ['admin', 'sales', 'accountant'],
+    roles: ['admin', 'sales', 'accountant', 'stock'],
     items: [
       { to: '/clients', key: 'customers', Icon: Users },
-      { to: '/devis', key: 'quotes', Icon: FileText },
-      { to: '/factures', key: 'invoices', Icon: Receipt },
+      { to: '/documents', key: 'documents', Icon: FileText },
       { to: '/reglements', key: 'payments', Icon: Wallet },
     ],
   },

@@ -4,8 +4,7 @@
     "pilotage": "القيادة", "dashboard": "لوحة القيادة", "stats": "الإحصائيات",
     "purchasing": "المشتريات", "suppliers": "الموردون", "purchaseOrders": "طلبيات الموردين",
     "receipts": "الاستلامات", "requests": "طلبات الشراء",
-    "sales": "المبيعات", "customers": "الزبائن", "quotes": "عروض الأسعار", "orders": "طلبيات الزبائن",
-    "deliveries": "التسليمات", "invoices": "الفواتير", "payments": "المدفوعات",
+    "sales": "المبيعات", "customers": "الزبائن", "documents": "الوثائق", "payments": "المدفوعات",
     "resources": "الموارد", "products": "المنتجات", "stock": "المخزون", "serials": "الأرقام التسلسلية",
     "alerts": "التنبيهات", "profile": "الملف الشخصي", "users": "المستخدمون", "logout": "تسجيل الخروج"
   },
@@ -15,7 +14,8 @@
     "empty": "لا توجد عناصر للعرض", "error": "حدث خطأ",
     "retry": "إعادة المحاولة", "actions": "الإجراءات", "total": "المجموع", "all": "الكل",
     "darkMode": "الوضع الداكن", "lightMode": "الوضع الفاتح", "of": "من", "page": "الصفحة",
-    "export": "تصدير PDF", "send": "إرسال", "validate": "مصادقة", "back": "رجوع"
+    "export": "تصدير PDF", "send": "إرسال", "validate": "مصادقة", "back": "رجوع",
+    "upload": "تحميل", "change": "تغيير"
   },
   "status": {
     "draft": "مسودة", "pending": "قيد الانتظار", "validated": "مصادق", "partial": "جزئي",
@@ -56,7 +56,8 @@
     "numbering": "الترقيم", "docLang": "لغة الوثائق", "creditLimit": "سقف الائتمان",
     "changePassword": "تغيير كلمة المرور", "twoFactor": "المصادقة الثنائية (2FA)",
     "loginAlert": "تنبيه عند اتصال غير معتاد", "closeSessions": "إغلاق الجلسات الأخرى",
-    "logins": "سجل الاتصالات", "device": "الجهاز", "preferences": "التفضيلات"
+    "logins": "سجل الاتصالات", "device": "الجهاز", "preferences": "التفضيلات",
+    "logo": "الشعار", "stamp": "الختم", "signature": "التوقيع الإلكتروني"
   },
   "alerts": { "title": "مركز التنبيهات", "markAllRead": "تعليم الكل كمقروء",
               "resolve": "معالجة", "none": "لا توجد تنبيهات حاليًا" },
@@ -87,9 +88,18 @@
     "confirmDelete": "هل تريد حذف هذه الطلبية؟",
     "deleteError": "تعذّر الحذف: هذه الطلبية مرتبطة بوثائق موجودة."
   },
-  "quotes": {
-    "new": "عرض سعر جديد", "edit": "تعديل عرض السعر", "validUntil": "تاريخ الصلاحية",
-    "confirmDelete": "هل تريد حذف عرض السعر هذا؟",
-    "deleteError": "تعذّر الحذف: عرض السعر هذا مرتبط بوثائق موجودة."
+  "documents": {
+    "tabProforma": "أولي (بروفورما)", "tabBc": "طلبية", "tabBl": "تسليم", "tabFacture": "فاتورة",
+    "new_proforma": "فاتورة أولية جديدة", "new_bc": "طلبية جديدة", "new_bl": "تسليم جديد",
+    "new_facture": "فاتورة جديدة",
+    "edit_proforma": "تعديل الفاتورة الأولية", "edit_bc": "تعديل الطلبية", "edit_bl": "تعديل التسليم",
+    "edit_facture": "تعديل الفاتورة",
+    "generate_bc": "إنشاء طلبية", "generate_bl": "إنشاء تسليم", "generate_facture": "إنشاء فاتورة",
+    "validUntil": "تاريخ الصلاحية", "warehouse": "المستودع", "deliveredOn": "تاريخ التسليم",
+    "partial": "تسليم جزئي", "receivedBy": "استُلم من طرف", "dueDate": "الاستحقاق",
+    "stampDuty": "الطابع الجبائي",
+    "downloadPdf": "تحميل PDF", "downloadWord": "تحميل Word",
+    "confirmDelete": "هل تريد حذف هذه الوثيقة؟",
+    "deleteError": "تعذّر الحذف: هذه الوثيقة مرتبطة بوثائق أخرى."
   }
 }

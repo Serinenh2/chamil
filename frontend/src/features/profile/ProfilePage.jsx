@@ -8,6 +8,7 @@ import { useFormat } from '@/hooks/useFormat'
 import { useAuth } from '@/context/AuthContext'
 import { Alert, Button, Card, Field, Input, KeyValue, Select, Spinner, Tabs } from '@/components/ui'
 import CompanyTab from './CompanyTab'
+import ImageUploader from './ImageUploader'
 import SecurityTab from './SecurityTab'
 import ActivityLogTab from './ActivityLogTab'
 
@@ -49,6 +50,20 @@ export default function ProfilePage() {
       })
       setEditing(false)
     },
+  })
+
+  const invalidateProfile = () => qc.invalidateQueries({ queryKey: ['/profile/owner/me/'] })
+  const uploadSignature = useMutation({
+    mutationFn: (file) => {
+      const fd = new FormData()
+      fd.append('signature', file)
+      return rest.patch('/profile/owner/me/', fd)
+    },
+    onSuccess: invalidateProfile,
+  })
+  const deleteSignature = useMutation({
+    mutationFn: () => rest.patch('/profile/owner/me/', { signature: null }),
+    onSuccess: invalidateProfile,
   })
 
   const startEdit = () => {
@@ -119,6 +134,12 @@ export default function ProfilePage() {
               <Alert tone="error">{errorText(saveProfile.error, t('common.error'))}</Alert>
             )}
 
+            {isOwner && profile && (
+              <ImageUploader label={t('profile.signature')} imageUrl={profile.signature}
+                             onUpload={(file) => uploadSignature.mutateAsync(file)}
+                             onDelete={() => deleteSignature.mutateAsync()} />
+            )}
+
             {profile && editing && (
               <>
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -175,7 +196,11 @@ export default function ProfilePage() {
                 </div>
                 <div className="mt-2 flex gap-2">
                   <Button size="sm" disabled={saveProfile.isPending}
-                          onClick={() => saveProfile.mutate(form)}>
+                          onClick={() => saveProfile.mutate({
+                            ...form,
+                            birth_date: form.birth_date || null,
+                            appointed_on: form.appointed_on || null,
+                          })}>
                     {t('common.save')}
                   </Button>
                   <Button size="sm" variant="secondary" onClick={() => setEditing(false)}>
