@@ -89,6 +89,16 @@
     "confirmDelete": "Supprimer cette commande ?",
     "deleteError": "Impossible de supprimer : cette commande est référencée par des documents existants."
   },
+  "products": {
+    "new": "Nouveau produit", "edit": "Modifier le produit",
+    "designation": "Désignation", "designationAr": "التسمية", "description": "Description",
+    "category": "Catégorie", "brand": "Marque", "model": "Modèle", "reference": "Référence",
+    "unit": "Unité", "purchasePrice": "Prix d'achat", "salePrice": "Prix de vente",
+    "vat": "TVA (%)", "minStock": "Seuil minimum", "maxStock": "Seuil maximum",
+    "warranty": "Garantie (mois)", "hasSerial": "Suivi par numéro de série",
+    "confirmDelete": "Supprimer ce produit ?",
+    "deleteError": "Impossible de supprimer : ce produit est référencé par des documents existants."
+  },
   "documents": {
     "tabProforma": "Proforma", "tabBc": "BC", "tabBl": "BL", "tabFacture": "Facture",
     "new_proforma": "Nouveau proforma", "new_bc": "Nouveau BC", "new_bl": "Nouveau BL",

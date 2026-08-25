@@ -2,6 +2,11 @@ export const PURCHASE_ORDER_PAYMENT_METHODS = [
   ['cash', 'Espèce'], ['certified_check', 'Chèque certifié'], ['transfer', 'Virement'],
 ]
 
+export const UNITS = [
+  ['piece', 'Unité'], ['box', 'Boîte'], ['pack', 'Paquet'],
+  ['kg', 'Kilogramme'], ['m', 'Mètre'], ['l', 'Litre'], ['service', 'Prestation'],
+]
+
 export const PAYMENT_TERMS = [
   ['cash', 'Comptant'], ['15', '15 jours'], ['30', '30 jours'], ['45', '45 jours'],
   ['60', '60 jours'], ['90', '90 jours'],
