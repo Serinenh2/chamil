@@ -115,13 +115,13 @@ export default function CustomersPage() {
               <Alert tone="error">{errorText(saveCustomer.error, t('common.error'))}</Alert>
             )}
             <div className="grid gap-4 sm:grid-cols-2">
+              <Field label={t('customers.customerType')}>
+                <Select value={form.customer_type}
+                        onChange={(e) => setForm({ ...form, customer_type: e.target.value })}>
+                  {CUSTOMER_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                </Select>
+              </Field>
               <PartnerFormFields form={form} setForm={setForm} codeHint="Identifiant unique, ex : CLI004.">
-                <Field label={t('customers.customerType')}>
-                  <Select value={form.customer_type}
-                          onChange={(e) => setForm({ ...form, customer_type: e.target.value })}>
-                    {CUSTOMER_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-                  </Select>
-                </Field>
                 <Field label={t('customers.creditLimit')}>
                   <Input type="number" step="0.01" value={form.credit_limit}
                          onChange={(e) => setForm({ ...form, credit_limit: e.target.value })} />

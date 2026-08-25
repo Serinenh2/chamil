@@ -9,3 +9,9 @@ export const CUSTOMER_TYPES = [
   ['sme', 'PME'], ['large', 'Grande entreprise'], ['association', 'Association'],
   ['professional', 'Professionnel'], ['individual', 'Particulier'], ['other', 'Autre'],
 ]
+
+// Types de client sans registre de commerce ni identifiants fiscaux/statistiques
+// d'entreprise (RC/NIF/NIS) — ces champs sont masqués dans le formulaire pour eux.
+export const CUSTOMER_TYPES_WITHOUT_BUSINESS_IDS = [
+  'public_admin', 'public_estab', 'association', 'individual',
+]

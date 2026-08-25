@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Field, Input, Select, Textarea } from '@/components/ui'
-import { PAYMENT_TERMS } from '@/constants/choices'
+import { CUSTOMER_TYPES_WITHOUT_BUSINESS_IDS, PAYMENT_TERMS } from '@/constants/choices'
 import { communeOptions, wilayaOptions } from '@/constants/geo'
 import { useUi } from '@/context/UiContext'
 
@@ -13,6 +13,7 @@ export default function PartnerFormFields({ form, setForm, codeHint, children })
   const { t } = useTranslation()
   const { lang } = useUi()
   const set = (patch) => setForm({ ...form, ...patch })
+  const needsBusinessIds = !CUSTOMER_TYPES_WITHOUT_BUSINESS_IDS.includes(form.customer_type)
 
   return (
     <>
@@ -57,15 +58,19 @@ export default function PartnerFormFields({ form, setForm, codeHint, children })
       <Field label={t('partners.website')}>
         <Input type="url" value={form.website} onChange={(e) => set({ website: e.target.value })} />
       </Field>
-      <Field label="RC">
-        <Input value={form.rc} onChange={(e) => set({ rc: e.target.value })} />
-      </Field>
-      <Field label="NIF">
-        <Input value={form.nif} onChange={(e) => set({ nif: e.target.value })} />
-      </Field>
-      <Field label="NIS">
-        <Input value={form.nis} onChange={(e) => set({ nis: e.target.value })} />
-      </Field>
+      {needsBusinessIds && (
+        <>
+          <Field label="RC">
+            <Input value={form.rc} onChange={(e) => set({ rc: e.target.value })} />
+          </Field>
+          <Field label="NIF">
+            <Input value={form.nif} onChange={(e) => set({ nif: e.target.value })} />
+          </Field>
+          <Field label="NIS">
+            <Input value={form.nis} onChange={(e) => set({ nis: e.target.value })} />
+          </Field>
+        </>
+      )}
       <Field label={t('partners.paymentTerm')}>
         <Select value={form.payment_term} onChange={(e) => set({ payment_term: e.target.value })}>
           {PAYMENT_TERMS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
