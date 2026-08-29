@@ -7,8 +7,8 @@ from apps.core.viewsets import BaseModelViewSet
 
 from .models import GoodsReceipt, PurchaseOrder, PurchaseRequest, SupplierQuote
 from .serializers import (
-    GoodsReceiptSerializer, PurchaseOrderListSerializer, PurchaseOrderSerializer,
-    PurchaseRequestSerializer, SupplierQuoteSerializer,
+    GoodsReceiptListSerializer, GoodsReceiptSerializer, PurchaseOrderListSerializer,
+    PurchaseOrderSerializer, PurchaseRequestSerializer, SupplierQuoteSerializer,
 )
 
 BUYER_ROLES = ("owner", "admin", "buyer")
@@ -100,11 +100,14 @@ class PurchaseOrderViewSet(BaseModelViewSet):
 
 
 class GoodsReceiptViewSet(BaseModelViewSet):
-    queryset = GoodsReceipt.objects.select_related("supplier", "order", "warehouse")
-    serializer_class = GoodsReceiptSerializer
+    queryset = GoodsReceipt.objects.select_related(
+        "supplier", "order", "warehouse").prefetch_related("lines__product")
     write_roles = ("owner", "admin", "buyer", "stock")
     filterset_fields = ("supplier", "order", "warehouse", "status")
     search_fields = ("number",)
+
+    def get_serializer_class(self):
+        return GoodsReceiptListSerializer if self.action == "list" else GoodsReceiptSerializer
 
     @action(detail=True, methods=["post"])
     def apply_stock(self, request, pk=None):

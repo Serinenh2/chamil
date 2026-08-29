@@ -3,7 +3,7 @@
   "nav": {
     "pilotage": "Pilotage", "dashboard": "Tableau de bord", "stats": "Statistiques",
     "purchasing": "Achats", "suppliers": "Fournisseurs", "purchaseOrders": "Commandes fournisseurs",
-    "receipts": "Réceptions", "requests": "Demandes d'achat",
+    "receipts": "Réceptions", "supplierPayments": "Règlements fournisseurs", "requests": "Demandes d'achat",
     "sales": "Ventes", "customers": "Clients", "documents": "Documents", "payments": "Règlements",
     "resources": "Ressources", "products": "Produits", "stock": "Stock", "serials": "Numéros de série",
     "alerts": "Alertes", "profile": "Profil", "users": "Utilisateurs", "logout": "Déconnexion"
@@ -15,7 +15,7 @@
     "retry": "Réessayer", "actions": "Actions", "total": "Total", "all": "Tous",
     "darkMode": "Mode sombre", "lightMode": "Mode clair", "of": "sur", "page": "Page",
     "export": "Exporter PDF", "send": "Envoyer", "validate": "Valider", "back": "Retour",
-    "upload": "Téléverser", "change": "Changer"
+    "upload": "Téléverser", "change": "Changer", "yes": "Oui", "no": "Non"
   },
   "status": {
     "draft": "Brouillon", "pending": "En attente", "validated": "Validé", "partial": "Partiel",
@@ -34,6 +34,23 @@
     "supplierDebt": "Dettes fournisseurs", "trend": "Achats vs Ventes", "topCustomers": "Meilleurs clients",
     "topProducts": "Produits les plus vendus", "openAlerts": "Alertes ouvertes",
     "purchases": "Achats", "salesLabel": "Ventes"
+  },
+  "stats": {
+    "purchasesMonth": "Achats du mois", "purchasesYear": "Achats de l'année",
+    "activeSuppliers": "Fournisseurs actifs", "supplierDebt": "Dette fournisseurs",
+    "openOrders": "Commandes ouvertes", "lateOrders": "Commandes en retard",
+    "supplierInvoices": "Factures fournisseurs", "topSuppliers": "Meilleurs fournisseurs",
+    "revenueMonth": "CA du mois", "revenueYear": "CA de l'année",
+    "newCustomers": "Nouveaux clients", "pendingQuotes": "Devis en attente",
+    "unpaidInvoices": "Factures impayées",
+    "profitability": "Rentabilité par produit", "revenue": "Chiffre d'affaires",
+    "cost": "Coût", "margin": "Marge", "marginRate": "Taux de marge"
+  },
+  "stock": {
+    "value": "Valeur", "lines": "Lignes de stock", "lowOrOut": "Ruptures / seuil bas",
+    "currentStock": "Stock actuel", "movements": "Mouvements", "allWarehouses": "Tous les dépôts",
+    "movementType": "Type de mouvement", "unitCost": "Coût unitaire",
+    "newMovement": "Nouveau mouvement"
   },
   "table": {
     "number": "Numéro", "date": "Date", "customer": "Client", "supplier": "Fournisseur",
@@ -86,8 +103,43 @@
     "warranty": "Garantie (mois)", "expectedOn": "Livraison prévue",
     "responsible": "Responsable", "deliveryAddress": "Adresse de livraison",
     "lines": "Lignes de commande", "addLine": "Ajouter une ligne",
+    "importCsv": "Importer bon de commande",
+    "importNotFound": "Codes produit introuvables, ignorés",
     "confirmDelete": "Supprimer cette commande ?",
     "deleteError": "Impossible de supprimer : cette commande est référencée par des documents existants."
+  },
+  "receipts": {
+    "new": "Nouvelle réception", "edit": "Modifier la réception", "view": "Consulter la réception",
+    "readOnlyNotice": "Réception déjà validée : le stock a été mis à jour, elle n'est plus modifiable.",
+    "order": "Commande fournisseur", "orderHelp": "Facultatif — préremplit les lignes depuis la commande.",
+    "warehouse": "Dépôt", "receivedOn": "Date de réception", "location": "Emplacement",
+    "orderedQty": "Qté commandée", "receivedQty": "Qté reçue", "damagedQty": "Qté endommagée",
+    "importCsv": "Importer bon de livraison",
+    "importNotFound": "Codes produit introuvables, ignorés",
+    "applyStock": "Valider l'entrée en stock", "stockApplied": "Stock à jour",
+    "stockPending": "En attente",
+    "confirmApply": "Confirmer l'entrée en stock ? Cette action est définitive.",
+    "confirmDelete": "Supprimer cette réception ?",
+    "deleteError": "Impossible de supprimer cette réception."
+  },
+  "customerPayments": {
+    "new": "Nouveau règlement", "edit": "Modifier le règlement",
+    "method": "Mode de paiement", "reference": "Référence", "note": "Observation",
+    "invoice": "Facture client", "balance": "solde :",
+    "settled": "Règlement", "settlementDate": "Date de règlement",
+    "confirmDelete": "Supprimer ce règlement ?",
+    "deleteError": "Impossible de supprimer ce règlement."
+  },
+  "supplierPayments": {
+    "new": "Nouveau règlement", "edit": "Modifier le règlement",
+    "method": "Mode de paiement", "reference": "Référence", "note": "Observation",
+    "invoice": "Facture fournisseur", "balance": "solde :",
+    "settled": "Règlement", "settlementDate": "Date de règlement",
+    "importInvoice": "Importer facture",
+    "searchInvoice": "Rechercher une facture",
+    "searchInvoicePlaceholder": "Numéro de facture…",
+    "confirmDelete": "Supprimer ce règlement ?",
+    "deleteError": "Impossible de supprimer ce règlement."
   },
   "products": {
     "new": "Nouveau produit", "edit": "Modifier le produit",

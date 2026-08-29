@@ -143,6 +143,8 @@ class Payment(TimeStampedModel):
     direction = models.CharField(_("sens"), max_length=3, choices=Direction.choices, db_index=True)
     paid_on = models.DateField(_("date"), default=timezone.now)
     amount = models.DecimalField(_("montant"), max_digits=14, decimal_places=2)
+    is_settled = models.BooleanField(_("réglé"), default=False)
+    settlement_date = models.DateField(_("date de règlement"), null=True, blank=True)
     method = models.CharField(_("mode de paiement"), max_length=10,
                               choices=PaymentMethod.choices, default=PaymentMethod.TRANSFER)
     bank = models.CharField(_("banque"), max_length=120, blank=True)

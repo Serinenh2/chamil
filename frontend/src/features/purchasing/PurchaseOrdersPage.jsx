@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { rest } from '@/services/api'
 import { useList, useRemove, useSave } from '@/hooks/useResource'
 import { useFormat } from '@/hooks/useFormat'
@@ -14,7 +14,7 @@ import { PAYMENT_TERMS, PURCHASE_ORDER_PAYMENT_METHODS } from '@/constants/choic
 const TONE = { draft: 'draft', pending: 'pending', validated: 'ok',
                partial: 'pending', completed: 'ok', cancelled: 'cancelled' }
 
-const EMPTY_LINE = { product: '', quantity: 1, unit_price: 0, discount: 0, vat_rate: 19 }
+const EMPTY_LINE = { product: '', quantity: 1, unit_price: 0, discount: 0, vat_rate: 19, payment_method: '' }
 const EMPTY_FORM = {
   supplier: '', payment_term: '30', payment_method: '', discount: 0,
   lead_time_days: 0, warranty_months: 12, expected_on: '', delivery_address: '',
@@ -36,6 +36,24 @@ function lineTotal(line) {
   return net + (net * vat) / 100
 }
 
+/** CSV avec en-tête "code;quantite" (ou "code,quantite") — export Excel FR ou standard. */
+function parseOrderCsv(text) {
+  const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean)
+  if (!lines.length) return []
+  const delimiter = lines[0].includes(';') ? ';' : ','
+  const header = lines[0].toLowerCase().split(delimiter).map((h) => h.trim())
+  const codeIdx = header.findIndex((h) => h.includes('code'))
+  const qtyIdx = header.findIndex((h) => h.includes('quant'))
+  const dataLines = codeIdx === -1 ? lines : lines.slice(1)
+  return dataLines.map((line) => {
+    const cells = line.split(delimiter).map((c) => c.trim())
+    return {
+      code: cells[codeIdx === -1 ? 0 : codeIdx],
+      quantity: Number((cells[qtyIdx === -1 ? 1 : qtyIdx] || '1').replace(',', '.')) || 1,
+    }
+  }).filter((row) => row.code)
+}
+
 export default function PurchaseOrdersPage() {
   const { t } = useTranslation()
   const { money, date } = useFormat()
@@ -43,6 +61,8 @@ export default function PurchaseOrdersPage() {
   const canWrite = can('admin', 'buyer')
   const [form, setForm] = useState(null)
   const [loadingEditId, setLoadingEditId] = useState(null)
+  const [importError, setImportError] = useState(null)
+  const fileInputRef = useRef(null)
 
   const { data, isLoading, error } = useList('purchase-orders', { page_size: 25 })
   const { data: suppliers } = useList('suppliers', { page_size: 200 }, { enabled: !!form })
@@ -71,6 +91,7 @@ export default function PurchaseOrdersPage() {
           ? detail.lines.map((l) => ({
               id: l.id, product: l.product, quantity: l.quantity,
               unit_price: l.unit_price, discount: l.discount, vat_rate: l.vat_rate,
+              payment_method: l.payment_method || '',
             }))
           : [{ ...EMPTY_LINE }],
       })
@@ -99,6 +120,43 @@ export default function PurchaseOrdersPage() {
       unit_price: product?.purchase_price ?? 0,
       vat_rate: product?.vat_rate ?? 19,
     })
+  }
+
+  const handleImportClick = () => {
+    setImportError(null)
+    fileInputRef.current?.click()
+  }
+
+  const handleImportFile = (e) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      const rows = parseOrderCsv(String(reader.result || ''))
+      const notFound = []
+      const imported = []
+      rows.forEach(({ code, quantity }) => {
+        const product = products?.results?.find(
+          (p) => p.code.toLowerCase() === code.toLowerCase(),
+        )
+        if (!product) {
+          notFound.push(code)
+          return
+        }
+        imported.push({
+          product: product.id, quantity, unit_price: product.purchase_price ?? 0,
+          discount: 0, vat_rate: product.vat_rate ?? 19, payment_method: '',
+        })
+      })
+      if (imported.length) {
+        const existing = form.line_items.filter((l) => l.product)
+        setForm({ ...form, line_items: [...existing, ...imported] })
+      }
+      setImportError(notFound.length
+        ? `${t('purchaseOrders.importNotFound')} : ${notFound.join(', ')}` : null)
+    }
+    reader.readAsText(file)
   }
 
   const submit = (e) => {
@@ -223,6 +281,7 @@ export default function PurchaseOrdersPage() {
                     <th className="th min-w-[132px] text-end">{t('table.price')}</th>
                     <th className="th min-w-[84px] text-end">{t('partners.discount')}</th>
                     <th className="th min-w-[100px] text-end">TVA %</th>
+                    <th className="th min-w-[150px]">{t('purchaseOrders.paymentMethod')}</th>
                     <th className="th min-w-[130px] text-end">{t('table.amount')}</th>
                     <th className="th" />
                   </tr>
@@ -255,6 +314,13 @@ export default function PurchaseOrdersPage() {
                         <Input type="number" step="0.01" min="0" value={line.vat_rate}
                                onChange={(e) => updateLine(idx, { vat_rate: e.target.value })} />
                       </td>
+                      <td className="td min-w-[150px]">
+                        <Select value={line.payment_method}
+                                onChange={(e) => updateLine(idx, { payment_method: e.target.value })}>
+                          <option value="">—</option>
+                          {PURCHASE_ORDER_PAYMENT_METHODS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+                        </Select>
+                      </td>
                       <td className="td-num min-w-[130px] data">{money(lineTotal(line))}</td>
                       <td className="td">
                         <button type="button" onClick={() => removeLine(idx)}
@@ -284,9 +350,16 @@ export default function PurchaseOrdersPage() {
               </Field>
             </div>
 
+            {importError && <Alert tone="warn">{importError}</Alert>}
+            <input ref={fileInputRef} type="file" accept=".csv,text/csv" className="hidden"
+                   onChange={handleImportFile} />
+
             <div className="mt-2 flex gap-2">
               <Button type="submit" disabled={saveOrder.isPending}>
                 {t('common.save')}
+              </Button>
+              <Button type="button" variant="secondary" icon={Upload} onClick={handleImportClick}>
+                {t('purchaseOrders.importCsv')}
               </Button>
               <Button type="button" variant="secondary" onClick={() => setForm(null)}>
                 {t('common.cancel')}

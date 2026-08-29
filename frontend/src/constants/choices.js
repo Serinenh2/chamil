@@ -7,6 +7,11 @@ export const UNITS = [
   ['kg', 'Kilogramme'], ['m', 'Mètre'], ['l', 'Litre'], ['service', 'Prestation'],
 ]
 
+export const PAYMENT_METHODS = [
+  ['cash', 'Espèces'], ['check', 'Chèque'], ['transfer', 'Virement'],
+  ['card', 'Carte'], ['bill', 'Traite'], ['other', 'Autre'],
+]
+
 export const PAYMENT_TERMS = [
   ['cash', 'Comptant'], ['15', '15 jours'], ['30', '30 jours'], ['45', '45 jours'],
   ['60', '60 jours'], ['90', '90 jours'],

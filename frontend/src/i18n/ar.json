@@ -3,7 +3,7 @@
   "nav": {
     "pilotage": "القيادة", "dashboard": "لوحة القيادة", "stats": "الإحصائيات",
     "purchasing": "المشتريات", "suppliers": "الموردون", "purchaseOrders": "طلبيات الموردين",
-    "receipts": "الاستلامات", "requests": "طلبات الشراء",
+    "receipts": "الاستلامات", "supplierPayments": "مدفوعات الموردين", "requests": "طلبات الشراء",
     "sales": "المبيعات", "customers": "الزبائن", "documents": "الوثائق", "payments": "المدفوعات",
     "resources": "الموارد", "products": "المنتجات", "stock": "المخزون", "serials": "الأرقام التسلسلية",
     "alerts": "التنبيهات", "profile": "الملف الشخصي", "users": "المستخدمون", "logout": "تسجيل الخروج"
@@ -15,7 +15,7 @@
     "retry": "إعادة المحاولة", "actions": "الإجراءات", "total": "المجموع", "all": "الكل",
     "darkMode": "الوضع الداكن", "lightMode": "الوضع الفاتح", "of": "من", "page": "الصفحة",
     "export": "تصدير PDF", "send": "إرسال", "validate": "مصادقة", "back": "رجوع",
-    "upload": "تحميل", "change": "تغيير"
+    "upload": "تحميل", "change": "تغيير", "yes": "نعم", "no": "لا"
   },
   "status": {
     "draft": "مسودة", "pending": "قيد الانتظار", "validated": "مصادق", "partial": "جزئي",
@@ -34,6 +34,23 @@
     "supplierDebt": "ديون الموردين", "trend": "المشتريات مقابل المبيعات", "topCustomers": "أفضل الزبائن",
     "topProducts": "المنتجات الأكثر مبيعًا", "openAlerts": "تنبيهات مفتوحة",
     "purchases": "المشتريات", "salesLabel": "المبيعات"
+  },
+  "stats": {
+    "purchasesMonth": "مشتريات الشهر", "purchasesYear": "مشتريات السنة",
+    "activeSuppliers": "موردون نشِطون", "supplierDebt": "ديون الموردين",
+    "openOrders": "طلبيات مفتوحة", "lateOrders": "طلبيات متأخرة",
+    "supplierInvoices": "فواتير الموردين", "topSuppliers": "أفضل الموردين",
+    "revenueMonth": "رقم أعمال الشهر", "revenueYear": "رقم أعمال السنة",
+    "newCustomers": "زبائن جدد", "pendingQuotes": "عروض في الانتظار",
+    "unpaidInvoices": "فواتير غير مدفوعة",
+    "profitability": "ربحية المنتجات", "revenue": "رقم الأعمال",
+    "cost": "التكلفة", "margin": "الهامش", "marginRate": "نسبة الهامش"
+  },
+  "stock": {
+    "value": "القيمة", "lines": "بنود المخزون", "lowOrOut": "نفاد / حد أدنى",
+    "currentStock": "المخزون الحالي", "movements": "الحركات", "allWarehouses": "كل المستودعات",
+    "movementType": "نوع الحركة", "unitCost": "التكلفة الوحدوية",
+    "newMovement": "حركة جديدة"
   },
   "table": {
     "number": "الرقم", "date": "التاريخ", "customer": "الزبون", "supplier": "المورّد",
@@ -87,8 +104,44 @@
     "warranty": "الضمان (أشهر)", "expectedOn": "تاريخ التسليم المتوقع",
     "responsible": "المسؤول", "deliveryAddress": "عنوان التسليم",
     "lines": "بنود الطلبية", "addLine": "إضافة بند",
+    "importCsv": "استيراد طلبية شراء",
+    "importNotFound": "رموز منتجات غير موجودة، تم تجاهلها",
     "confirmDelete": "هل تريد حذف هذه الطلبية؟",
     "deleteError": "تعذّر الحذف: هذه الطلبية مرتبطة بوثائق موجودة."
+  },
+  "receipts": {
+    "new": "استلام جديد", "edit": "تعديل الاستلام", "view": "عرض الاستلام",
+    "readOnlyNotice": "تم التحقق من هذا الاستلام: تم تحديث المخزون، ولم يعد قابلاً للتعديل.",
+    "order": "طلبية المورد", "orderHelp": "اختياري — يملأ البنود تلقائيًا من الطلبية.",
+    "warehouse": "المستودع", "receivedOn": "تاريخ الاستلام", "location": "الموقع",
+    "orderedQty": "الكمية المطلوبة", "receivedQty": "الكمية المستلمة",
+    "damagedQty": "الكمية التالفة",
+    "importCsv": "استيراد سند تسليم",
+    "importNotFound": "رموز منتجات غير موجودة، تم تجاهلها",
+    "applyStock": "تأكيد إدخال المخزون", "stockApplied": "تم تحديث المخزون",
+    "stockPending": "في الانتظار",
+    "confirmApply": "تأكيد إدخال المخزون؟ هذا الإجراء نهائي.",
+    "confirmDelete": "هل تريد حذف هذا الاستلام؟",
+    "deleteError": "تعذّر حذف هذا الاستلام."
+  },
+  "customerPayments": {
+    "new": "دفعة جديدة", "edit": "تعديل الدفعة",
+    "method": "طريقة الدفع", "reference": "المرجع", "note": "ملاحظة",
+    "invoice": "فاتورة الزبون", "balance": "الرصيد:",
+    "settled": "التسوية", "settlementDate": "تاريخ التسوية",
+    "confirmDelete": "هل تريد حذف هذه الدفعة؟",
+    "deleteError": "تعذّر حذف هذه الدفعة."
+  },
+  "supplierPayments": {
+    "new": "دفعة جديدة", "edit": "تعديل الدفعة",
+    "method": "طريقة الدفع", "reference": "المرجع", "note": "ملاحظة",
+    "invoice": "فاتورة المورد", "balance": "الرصيد:",
+    "settled": "التسوية", "settlementDate": "تاريخ التسوية",
+    "importInvoice": "استيراد فاتورة",
+    "searchInvoice": "البحث عن فاتورة",
+    "searchInvoicePlaceholder": "رقم الفاتورة…",
+    "confirmDelete": "هل تريد حذف هذه الدفعة؟",
+    "deleteError": "تعذّر حذف هذه الدفعة."
   },
   "products": {
     "new": "منتج جديد", "edit": "تعديل المنتج",

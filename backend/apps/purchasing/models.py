@@ -150,6 +150,8 @@ class PurchaseOrderLine(LineBase):
     order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name="lines")
     received_quantity = models.DecimalField(_("quantité reçue"), max_digits=12,
                                             decimal_places=2, default=0)
+    payment_method = models.CharField(_("mode de paiement"), max_length=20,
+                                      choices=PurchaseOrderPaymentMethod.choices, blank=True)
 
     @property
     def remaining_quantity(self):

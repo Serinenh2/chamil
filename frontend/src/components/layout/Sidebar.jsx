@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
-  AlertTriangle, Boxes, FileText, LayoutDashboard, Package, ShoppingCart,
+  AlertTriangle, Banknote, Boxes, FileText, LayoutDashboard, Package, ShoppingCart,
   TrendingUp, Truck, UserCircle, Users, Wallet,
 } from 'lucide-react'
 import { useAuth } from '@/context/AuthContext'
@@ -22,6 +22,7 @@ const SECTIONS = [
       { to: '/fournisseurs', key: 'suppliers', Icon: Users },
       { to: '/commandes-fournisseurs', key: 'purchaseOrders', Icon: ShoppingCart },
       { to: '/receptions', key: 'receipts', Icon: Truck },
+      { to: '/reglements-fournisseurs', key: 'supplierPayments', Icon: Banknote },
     ],
   },
   {

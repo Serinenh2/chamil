@@ -18,6 +18,7 @@ const EMPTY_FORM = {
   warranty_months: 12, has_serial: false, is_active: true,
 }
 
+
 function errorText(error, fallback) {
   return Object.values(error?.response?.data || {}).flat().join(' ') || fallback
 }
@@ -165,31 +166,16 @@ export default function ProductsPage() {
                 <Input value={form.reference}
                        onChange={(e) => setForm({ ...form, reference: e.target.value })} />
               </Field>
+              <div className="flex items-center pt-6">
+                <Switch checked={!!form.has_serial}
+                        onChange={() => setForm({ ...form, has_serial: !form.has_serial })}
+                        label={t('products.hasSerial')} />
+              </div>
               <Field label={t('products.unit')}>
                 <Select value={form.unit}
                         onChange={(e) => setForm({ ...form, unit: e.target.value })}>
                   {UNITS.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                 </Select>
-              </Field>
-              <Field label={t('products.purchasePrice')}>
-                <Input type="number" step="0.01" value={form.purchase_price}
-                       onChange={(e) => setForm({ ...form, purchase_price: e.target.value })} />
-              </Field>
-              <Field label={t('products.salePrice')}>
-                <Input type="number" step="0.01" value={form.sale_price}
-                       onChange={(e) => setForm({ ...form, sale_price: e.target.value })} />
-              </Field>
-              <Field label={t('products.vat')}>
-                <Input type="number" step="0.01" value={form.vat_rate}
-                       onChange={(e) => setForm({ ...form, vat_rate: e.target.value })} />
-              </Field>
-              <Field label={t('products.minStock')}>
-                <Input type="number" step="0.01" value={form.min_stock}
-                       onChange={(e) => setForm({ ...form, min_stock: e.target.value })} />
-              </Field>
-              <Field label={t('products.maxStock')}>
-                <Input type="number" step="0.01" value={form.max_stock}
-                       onChange={(e) => setForm({ ...form, max_stock: e.target.value })} />
               </Field>
               <Field label={t('products.warranty')}>
                 <Input type="number" value={form.warranty_months}
@@ -203,9 +189,6 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            <Switch checked={!!form.has_serial}
-                    onChange={() => setForm({ ...form, has_serial: !form.has_serial })}
-                    label={t('products.hasSerial')} />
             <Switch checked={!!form.is_active}
                     onChange={() => setForm({ ...form, is_active: !form.is_active })}
                     label={t('partners.active')} />

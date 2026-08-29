@@ -73,7 +73,8 @@ class PurchaseOrderLineWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PurchaseOrderLine
-        fields = ("id", "product", "description", "quantity", "unit_price", "discount", "vat_rate")
+        fields = ("id", "product", "description", "quantity", "unit_price", "discount", "vat_rate",
+                  "payment_method")
 
 
 class PurchaseOrderSerializer(DocumentSerializerMixin):
@@ -130,10 +131,68 @@ class PurchaseOrderListSerializer(serializers.ModelSerializer):
                   "status", "status_label", "expected_on", "is_late")
 
 
+class GoodsReceiptLineWriteSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+
+    class Meta:
+        model = GoodsReceiptLine
+        fields = ("id", "product", "description", "unit_price", "discount", "vat_rate",
+                  "ordered_quantity", "quantity", "received_quantity", "damaged_quantity",
+                  "serial_numbers")
+
+
 class GoodsReceiptSerializer(DocumentSerializerMixin):
     lines = GoodsReceiptLineSerializer(many=True, read_only=True)
+    line_items = GoodsReceiptLineWriteSerializer(many=True, write_only=True, required=False)
     supplier_name = serializers.CharField(source="supplier.name", read_only=True)
+    warehouse_name = serializers.CharField(source="warehouse.name", read_only=True)
+    order_number = serializers.CharField(source="order.number", read_only=True)
 
     class Meta(DocumentSerializerMixin.Meta):
         model = GoodsReceipt
         fields = "__all__"
+
+    def create(self, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        receipt = super().create(validated_data)
+        if lines_data is not None:
+            self._sync_lines(receipt, lines_data)
+        return receipt.recompute()
+
+    def update(self, instance, validated_data):
+        lines_data = validated_data.pop("line_items", None)
+        receipt = super().update(instance, validated_data)
+        if lines_data is not None:
+            self._sync_lines(receipt, lines_data)
+        return receipt.recompute()
+
+    def _sync_lines(self, receipt, lines_data):
+        existing = {line.id: line for line in receipt.lines.all()}
+        keep_ids = set()
+        for line_data in lines_data:
+            line_id = line_data.pop("id", None)
+            if line_id and line_id in existing:
+                line = existing[line_id]
+                for attr, value in line_data.items():
+                    setattr(line, attr, value)
+                line.save()
+                keep_ids.add(line_id)
+            else:
+                new_line = GoodsReceiptLine.objects.create(receipt=receipt, **line_data)
+                keep_ids.add(new_line.id)
+        for line_id, line in existing.items():
+            if line_id not in keep_ids:
+                line.delete()
+
+
+class GoodsReceiptListSerializer(serializers.ModelSerializer):
+    supplier_name = serializers.CharField(source="supplier.name", read_only=True)
+    warehouse_name = serializers.CharField(source="warehouse.name", read_only=True)
+    order_number = serializers.CharField(source="order.number", read_only=True)
+    status_label = serializers.CharField(source="get_status_display", read_only=True)
+
+    class Meta:
+        model = GoodsReceipt
+        fields = ("id", "number", "date", "received_on", "supplier", "supplier_name",
+                  "order", "order_number", "warehouse", "warehouse_name", "amount_ttc",
+                  "status", "status_label", "stock_applied")
